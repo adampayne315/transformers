@@ -297,7 +297,7 @@ class TokenizerTesterMixin:
             raise ValueError("This tokenizer class has no tokenizer to be tested.")
 
     @my_cache
-    @cache
+    @lru_cache
     def get_tokenizer(self, **kwargs) -> PreTrainedTokenizer:
         return self.tokenizer_class.from_pretrained(self.tmpdirname, **kwargs)
 

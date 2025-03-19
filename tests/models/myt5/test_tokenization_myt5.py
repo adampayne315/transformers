@@ -85,7 +85,7 @@ class TestByteRewriter(unittest.TestCase):
 
         self.assertEqual(decompose_rewriter.rewrite_bytes(in_hex), out_hex)
 
-from functools import cache
+from functools import cache, lru_cache
 
 class MyT5TokenizationTest(TokenizerTesterMixin, unittest.TestCase):
     tokenizer_class = MyT5Tokenizer
@@ -95,7 +95,7 @@ class MyT5TokenizationTest(TokenizerTesterMixin, unittest.TestCase):
         super().setUp()
 
     @my_cache
-    @cache
+    @lru_cache(maxsize=64)
     def get_tokenizer(self, **kwargs) -> MyT5Tokenizer:
         # breakpoint()
         return self.tokenizer_class.from_pretrained("Tomlim/myt5-base", **kwargs)
