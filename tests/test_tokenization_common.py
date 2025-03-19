@@ -74,11 +74,14 @@ if TYPE_CHECKING:
 def use_cache_if_possible(func):
     @functools.wraps(func)
     def wrapper(*args, **kwargs):
+        use_cache = kwargs.pop("use_cache", False)
 
         underline_func = func
         if "functools" in str(func):
             underline_func = func.__wrapped__
 
+        if not use_cache:
+            return underline_func(*args, **kwargs)
         if any(not arg.__hash__ for arg in args):
             return underline_func(*args, **kwargs)
         elif any(not kwarg.__hash__ for kwarg in kwargs.values()):
@@ -2798,7 +2801,7 @@ class TokenizerTesterMixin:
         if not self.test_slow_tokenizer:
             self.skipTest(reason="This test is only for slow tokenizers")
 
-        tokenizers = self.get_tokenizers(fast=False)
+        tokenizers = self.get_tokenizers(fast=False, use_cache=False)
         for tokenizer in tokenizers:
             with self.subTest(f"{tokenizer.__class__.__name__}"):
                 try:
