@@ -214,6 +214,7 @@ tokenization_job = CircleCIJob(
     "tokenization",
     docker_image=[{"image": "huggingface/transformers-torch-light"}],
     parallelism=8,
+    install_steps=["pip install -U pytest"],
 )
 
 processor_job = CircleCIJob(
