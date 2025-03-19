@@ -18,7 +18,7 @@ import unittest
 from transformers import MyT5Tokenizer
 from transformers.utils import is_tf_available, is_torch_available
 
-from ...test_tokenization_common import TokenizerTesterMixin
+from ...test_tokenization_common import TokenizerTesterMixin, my_cache
 
 
 if is_torch_available():
@@ -93,6 +93,7 @@ class MyT5TokenizationTest(TokenizerTesterMixin, unittest.TestCase):
     def setUp(self):
         super().setUp()
 
+    @my_cache
     def get_tokenizer(self, **kwargs) -> MyT5Tokenizer:
         return self.tokenizer_class.from_pretrained("Tomlim/myt5-base", **kwargs)
 
