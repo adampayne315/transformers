@@ -95,7 +95,7 @@ class MyT5TokenizationTest(TokenizerTesterMixin, unittest.TestCase):
         super().setUp()
 
     @use_cache_if_possible
-    @lru_cache(maxsize=64)
+    @lru_cache(maxsize=16)
     def get_tokenizer(self, **kwargs) -> MyT5Tokenizer:
         # breakpoint()
         return self.tokenizer_class.from_pretrained("Tomlim/myt5-base", **kwargs)

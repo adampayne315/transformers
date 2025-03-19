@@ -17,6 +17,7 @@
 import json
 import os
 import unittest
+from functools import lru_cache
 from typing import List
 
 from transformers import ClvpTokenizer
