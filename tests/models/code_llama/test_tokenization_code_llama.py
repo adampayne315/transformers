@@ -18,6 +18,7 @@ import pickle
 import shutil
 import tempfile
 import unittest
+from functools import lru_cache
 
 from datasets import load_dataset
 
@@ -37,7 +38,7 @@ from transformers.testing_utils import (
     slow,
 )
 
-from ...test_tokenization_common import TokenizerTesterMixin
+from ...test_tokenization_common import TokenizerTesterMixin, use_cache_if_possible
 
 
 SAMPLE_VOCAB = get_tests_dir("fixtures/test_sentencepiece.model")
@@ -61,6 +62,8 @@ class CodeLlamaTokenizationTest(TokenizerTesterMixin, unittest.TestCase):
         tokenizer.pad_token = tokenizer.eos_token
         tokenizer.save_pretrained(self.tmpdirname)
 
+    @use_cache_if_possible
+    @lru_cache(maxsize=64)
     def get_tokenizers(self, **kwargs):
         kwargs.update({"pad_token": "<PAD>"})
         return super().get_tokenizers(**kwargs)

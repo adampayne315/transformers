@@ -18,12 +18,13 @@ import itertools
 import json
 import os
 import unittest
+from functools import lru_cache
 
 from transformers import AddedToken, LongformerTokenizer, LongformerTokenizerFast
 from transformers.models.longformer.tokenization_longformer import VOCAB_FILES_NAMES
 from transformers.testing_utils import require_tokenizers, slow
 
-from ...test_tokenization_common import TokenizerTesterMixin
+from ...test_tokenization_common import TokenizerTesterMixin, use_cache_if_possible
 
 
 @require_tokenizers
@@ -73,6 +74,8 @@ class LongformerTokenizationTest(TokenizerTesterMixin, unittest.TestCase):
         with open(self.merges_file, "w", encoding="utf-8") as fp:
             fp.write("\n".join(merges))
 
+    @use_cache_if_possible
+    @lru_cache(maxsize=64)
     def get_tokenizer(self, **kwargs):
         kwargs.update(self.special_tokens_map)
         return self.tokenizer_class.from_pretrained(self.tmpdirname, **kwargs)

@@ -14,13 +14,14 @@
 import json
 import os
 import unittest
+from functools import lru_cache
 
 from transformers import BatchEncoding, LEDTokenizer, LEDTokenizerFast
 from transformers.models.led.tokenization_led import VOCAB_FILES_NAMES
 from transformers.testing_utils import require_tokenizers, require_torch
 from transformers.utils import cached_property
 
-from ...test_tokenization_common import TokenizerTesterMixin
+from ...test_tokenization_common import TokenizerTesterMixin, use_cache_if_possible
 
 
 @require_tokenizers
@@ -65,6 +66,8 @@ class TestTokenizationLED(TokenizerTesterMixin, unittest.TestCase):
         with open(self.merges_file, "w", encoding="utf-8") as fp:
             fp.write("\n".join(merges))
 
+    @use_cache_if_possible
+    @lru_cache(maxsize=64)
     def get_tokenizer(self, **kwargs):
         kwargs.update(self.special_tokens_map)
         return self.tokenizer_class.from_pretrained(self.tmpdirname, **kwargs)

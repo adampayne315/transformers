@@ -17,6 +17,7 @@
 import json
 import os
 import unittest
+from functools import lru_cache
 
 from transformers.models.gpt_neox_japanese.tokenization_gpt_neox_japanese import (
     VOCAB_FILES_NAMES,
@@ -24,7 +25,7 @@ from transformers.models.gpt_neox_japanese.tokenization_gpt_neox_japanese import
 )
 from transformers.testing_utils import require_tokenizers, slow
 
-from ...test_tokenization_common import TokenizerTesterMixin
+from ...test_tokenization_common import TokenizerTesterMixin, use_cache_if_possible
 
 
 @require_tokenizers
@@ -71,6 +72,8 @@ class GPTNeoXJapaneseTokenizationTest(TokenizerTesterMixin, unittest.TestCase):
         with open(self.emoji_file, "w") as emoji_writer:
             emoji_writer.write(json.dumps(emoji_tokens))
 
+    @use_cache_if_possible
+    @lru_cache(maxsize=64)
     def get_tokenizer(self, **kwargs):
         kwargs.update(self.special_tokens_map)
         return GPTNeoXJapaneseTokenizer.from_pretrained(self.tmpdirname, **kwargs)

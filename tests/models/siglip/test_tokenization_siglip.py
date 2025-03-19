@@ -17,12 +17,13 @@ import json
 import os
 import tempfile
 import unittest
+from functools import lru_cache
 
 from transformers import SPIECE_UNDERLINE, AddedToken, BatchEncoding, SiglipTokenizer
 from transformers.testing_utils import get_tests_dir, require_sentencepiece, require_tokenizers, slow
 from transformers.utils import cached_property, is_tf_available, is_torch_available
 
-from ...test_tokenization_common import TokenizerTesterMixin
+from ...test_tokenization_common import TokenizerTesterMixin, use_cache_if_possible
 
 
 SAMPLE_VOCAB = get_tests_dir("fixtures/test_sentencepiece.model")
@@ -136,6 +137,8 @@ class SiglipTokenizationTest(TokenizerTesterMixin, unittest.TestCase):
         return SiglipTokenizer.from_pretrained("google/siglip-base-patch16-224")
 
     # Copied from tests.models.t5.test_tokenization_t5.T5TokenizationTest.get_tokenizer with T5->Siglip
+    @use_cache_if_possible
+    @lru_cache(maxsize=64)
     def get_tokenizer(self, **kwargs) -> SiglipTokenizer:
         return self.tokenizer_class.from_pretrained(self.tmpdirname, **kwargs)
 

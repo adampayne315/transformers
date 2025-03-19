@@ -20,6 +20,7 @@ import re
 import shutil
 import tempfile
 import unittest
+from functools import lru_cache
 from typing import List
 
 from parameterized import parameterized
@@ -41,7 +42,7 @@ from transformers.testing_utils import (
     slow,
 )
 
-from ...test_tokenization_common import SMALL_TRAINING_CORPUS, TokenizerTesterMixin, merge_model_tokenizer_mappings
+from ...test_tokenization_common import SMALL_TRAINING_CORPUS, TokenizerTesterMixin, merge_model_tokenizer_mappings, use_cache_if_possible
 
 
 logger = logging.get_logger(__name__)
@@ -128,6 +129,8 @@ class LayoutLMv3TokenizationTest(TokenizerTesterMixin, unittest.TestCase):
         with open(self.merges_file, "w", encoding="utf-8") as fp:
             fp.write("\n".join(merges))
 
+    @use_cache_if_possible
+    @lru_cache(maxsize=64)
     def get_tokenizer(self, **kwargs):
         kwargs.update(self.special_tokens_map)
         return self.tokenizer_class.from_pretrained(self.tmpdirname, **kwargs)

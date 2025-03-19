@@ -17,12 +17,15 @@
 import os
 import tempfile
 import unittest
+from functools import lru_cache
 from typing import List
 
 from transformers.models.esm.tokenization_esm import VOCAB_FILES_NAMES, EsmTokenizer
 from transformers.testing_utils import require_tokenizers
 from transformers.tokenization_utils import PreTrainedTokenizer
 from transformers.tokenization_utils_base import PreTrainedTokenizerBase
+
+from ...test_tokenization_common import use_cache_if_possible
 
 
 @require_tokenizers
@@ -37,9 +40,13 @@ class ESMTokenizationTest(unittest.TestCase):
         with open(self.vocab_file, "w", encoding="utf-8") as vocab_writer:
             vocab_writer.write("".join([x + "\n" for x in vocab_tokens]))
 
+    @use_cache_if_possible
+    @lru_cache(maxsize=64)
     def get_tokenizers(self, **kwargs) -> List[PreTrainedTokenizerBase]:
         return [self.get_tokenizer(**kwargs)]
 
+    @use_cache_if_possible
+    @lru_cache(maxsize=64)
     def get_tokenizer(self, **kwargs) -> PreTrainedTokenizer:
         return self.tokenizer_class.from_pretrained(self.tmpdirname, **kwargs)
 

@@ -49,6 +49,8 @@ class PerceiverTokenizationTest(TokenizerTesterMixin, unittest.TestCase):
     def perceiver_tokenizer(self):
         return PerceiverTokenizer.from_pretrained("deepmind/language-perceiver")
 
+    @use_cache_if_possible
+    @lru_cache(maxsize=64)
     def get_tokenizer(self, **kwargs) -> PerceiverTokenizer:
         return self.tokenizer_class.from_pretrained(self.tmpdirname, **kwargs)
 

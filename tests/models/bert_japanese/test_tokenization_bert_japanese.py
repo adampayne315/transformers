@@ -17,6 +17,7 @@
 import os
 import pickle
 import unittest
+from functools import lru_cache
 
 from transformers import AutoTokenizer
 from transformers.models.bert.tokenization_bert import BertTokenizer
@@ -31,7 +32,7 @@ from transformers.models.bert_japanese.tokenization_bert_japanese import (
 )
 from transformers.testing_utils import custom_tokenizers, require_jumanpp, require_sudachi_projection
 
-from ...test_tokenization_common import TokenizerTesterMixin
+from ...test_tokenization_common import TokenizerTesterMixin, use_cache_if_possible
 
 
 @custom_tokenizers
@@ -417,6 +418,8 @@ class BertJapaneseCharacterTokenizationTest(TokenizerTesterMixin, unittest.TestC
         with open(self.vocab_file, "w", encoding="utf-8") as vocab_writer:
             vocab_writer.write("".join([x + "\n" for x in vocab_tokens]))
 
+    @use_cache_if_possible
+    @lru_cache(maxsize=64)
     def get_tokenizer(self, **kwargs):
         return BertJapaneseTokenizer.from_pretrained(self.tmpdirname, subword_tokenizer_type="character", **kwargs)
 

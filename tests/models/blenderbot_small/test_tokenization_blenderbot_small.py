@@ -18,13 +18,14 @@
 import json
 import os
 import unittest
+from functools import lru_cache
 
 from transformers.models.blenderbot_small.tokenization_blenderbot_small import (
     VOCAB_FILES_NAMES,
     BlenderbotSmallTokenizer,
 )
 
-from ...test_tokenization_common import TokenizerTesterMixin
+from ...test_tokenization_common import TokenizerTesterMixin, use_cache_if_possible
 
 
 class BlenderbotSmallTokenizerTest(TokenizerTesterMixin, unittest.TestCase):
@@ -48,6 +49,8 @@ class BlenderbotSmallTokenizerTest(TokenizerTesterMixin, unittest.TestCase):
         with open(self.merges_file, "w", encoding="utf-8") as fp:
             fp.write("\n".join(merges))
 
+    @use_cache_if_possible
+    @lru_cache(maxsize=64)
     def get_tokenizer(self, **kwargs):
         kwargs.update(self.special_tokens_map)
         return BlenderbotSmallTokenizer.from_pretrained(self.tmpdirname, **kwargs)

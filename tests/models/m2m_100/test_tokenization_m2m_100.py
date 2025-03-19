@@ -14,6 +14,7 @@
 
 import tempfile
 import unittest
+from functools import lru_cache
 from pathlib import Path
 from shutil import copyfile
 
@@ -32,7 +33,7 @@ from transformers.utils import is_sentencepiece_available
 if is_sentencepiece_available():
     from transformers.models.m2m_100.tokenization_m2m_100 import VOCAB_FILES_NAMES, save_json
 
-from ...test_tokenization_common import TokenizerTesterMixin
+from ...test_tokenization_common import TokenizerTesterMixin, use_cache_if_possible
 
 
 if is_sentencepiece_available():
@@ -67,6 +68,8 @@ class M2M100TokenizationTest(TokenizerTesterMixin, unittest.TestCase):
         tokenizer = M2M100Tokenizer.from_pretrained(self.tmpdirname)
         tokenizer.save_pretrained(self.tmpdirname)
 
+    @use_cache_if_possible
+    @lru_cache(maxsize=64)
     def get_tokenizer(self, **kwargs):
         return M2M100Tokenizer.from_pretrained(self.tmpdirname, **kwargs)
 

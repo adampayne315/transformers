@@ -13,6 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import functools
 import inspect
 import itertools
 import json
@@ -69,20 +70,10 @@ if is_torch_available():
 if TYPE_CHECKING:
     from transformers import PretrainedConfig, PreTrainedModel, TFPreTrainedModel
 
-import functools
-def my_cache(func):
 
+def use_cache_if_possible(func):
     @functools.wraps(func)
     def wrapper(*args, **kwargs):
-
-        # if len(args) == 0:
-        #     return func(*args, **kwargs)
-        # first_arg = args[0]
-        # if "testMethod=" not in repr(args[0]):
-        #     return func(*args, **kwargs)
-        # If it's a test method call: the first arg is `self` that is hashable
-        # breakpoint()
-        # breakpoint()
 
         underline_func = func
         if "functools" in str(func):
@@ -93,10 +84,10 @@ def my_cache(func):
         elif any(not kwarg.__hash__ for kwarg in kwargs.values()):
             return underline_func(*args, **kwargs)
 
-        # func is always the same, but we are calling cache on it everytime which gives new stuff!
         return func(*args, **kwargs)
 
     return wrapper
+
 
 logger = logging.get_logger(__name__)
 
@@ -296,8 +287,8 @@ class TokenizerTesterMixin:
         else:
             raise ValueError("This tokenizer class has no tokenizer to be tested.")
 
-    @my_cache
-    @lru_cache
+    @use_cache_if_possible
+    @lru_cache(maxsize=64)
     def get_tokenizer(self, **kwargs) -> PreTrainedTokenizer:
         return self.tokenizer_class.from_pretrained(self.tmpdirname, **kwargs)
 

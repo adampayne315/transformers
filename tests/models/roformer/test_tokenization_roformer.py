@@ -15,11 +15,12 @@
 
 import tempfile
 import unittest
+from functools import lru_cache
 
 from transformers import RoFormerTokenizer, RoFormerTokenizerFast
 from transformers.testing_utils import require_rjieba, require_tokenizers
 
-from ...test_tokenization_common import TokenizerTesterMixin
+from ...test_tokenization_common import TokenizerTesterMixin, use_cache_if_possible
 
 
 @require_rjieba
@@ -34,6 +35,8 @@ class RoFormerTokenizationTest(TokenizerTesterMixin, unittest.TestCase):
     def setUp(self):
         super().setUp()
 
+    @use_cache_if_possible
+    @lru_cache(maxsize=64)
     def get_tokenizer(self, **kwargs):
         return self.tokenizer_class.from_pretrained("junnyu/roformer_chinese_base", **kwargs)
 

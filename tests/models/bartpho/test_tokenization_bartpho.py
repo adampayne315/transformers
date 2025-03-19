@@ -15,11 +15,12 @@
 
 import os
 import unittest
+from functools import lru_cache
 
 from transformers.models.bartpho.tokenization_bartpho import VOCAB_FILES_NAMES, BartphoTokenizer
 from transformers.testing_utils import get_tests_dir
 
-from ...test_tokenization_common import TokenizerTesterMixin
+from ...test_tokenization_common import TokenizerTesterMixin, use_cache_if_possible
 
 
 SAMPLE_VOCAB = get_tests_dir("fixtures/test_sentencepiece_bpe.model")
@@ -46,6 +47,8 @@ class BartphoTokenizerTest(TokenizerTesterMixin, unittest.TestCase):
         tokenizer = BartphoTokenizer(SAMPLE_VOCAB, self.monolingual_vocab_file, **self.special_tokens_map)
         tokenizer.save_pretrained(self.tmpdirname)
 
+    @use_cache_if_possible
+    @lru_cache(maxsize=64)
     def get_tokenizer(self, **kwargs):
         kwargs.update(self.special_tokens_map)
         return BartphoTokenizer.from_pretrained(self.tmpdirname, **kwargs)

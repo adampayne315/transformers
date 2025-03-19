@@ -16,12 +16,13 @@
 
 import os
 import unittest
+from functools import lru_cache
 
 from transformers import LayoutLMTokenizer, LayoutLMTokenizerFast
 from transformers.models.layoutlm.tokenization_layoutlm import VOCAB_FILES_NAMES
 from transformers.testing_utils import require_tokenizers
 
-from ...test_tokenization_common import TokenizerTesterMixin
+from ...test_tokenization_common import TokenizerTesterMixin, use_cache_if_possible
 
 
 @require_tokenizers
@@ -54,6 +55,8 @@ class LayoutLMTokenizationTest(TokenizerTesterMixin, unittest.TestCase):
         with open(self.vocab_file, "w", encoding="utf-8") as vocab_writer:
             vocab_writer.write("".join([x + "\n" for x in vocab_tokens]))
 
+    @use_cache_if_possible
+    @lru_cache(maxsize=64)
     def get_tokenizer(self, **kwargs):
         return LayoutLMTokenizer.from_pretrained(self.tmpdirname, **kwargs)
 

@@ -21,7 +21,7 @@ from typing import List
 
 from transformers import ClvpTokenizer
 
-from ...test_tokenization_common import TokenizerTesterMixin, slow
+from ...test_tokenization_common import TokenizerTesterMixin, slow, use_cache_if_possible
 
 
 class ClvpTokenizationTest(TokenizerTesterMixin, unittest.TestCase):
@@ -72,6 +72,8 @@ class ClvpTokenizationTest(TokenizerTesterMixin, unittest.TestCase):
             fp.write("\n".join(merges))
 
     # Copied from transformers.tests.models.gpt2.test_tokenization_gpt2.GPT2TokenizationTest.get_tokenizer with GPT2->Clvp
+    @use_cache_if_possible
+    @lru_cache(maxsize=64)
     def get_tokenizer(self, **kwargs):
         kwargs.update(self.special_tokens_map)
         return ClvpTokenizer.from_pretrained(self.tmpdirname, **kwargs)

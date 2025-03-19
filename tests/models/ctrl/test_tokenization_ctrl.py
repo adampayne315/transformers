@@ -16,10 +16,11 @@
 import json
 import os
 import unittest
+from functools import lru_cache
 
 from transformers.models.ctrl.tokenization_ctrl import VOCAB_FILES_NAMES, CTRLTokenizer
 
-from ...test_tokenization_common import TokenizerTesterMixin
+from ...test_tokenization_common import TokenizerTesterMixin, use_cache_if_possible
 
 
 class CTRLTokenizationTest(TokenizerTesterMixin, unittest.TestCase):
@@ -44,6 +45,8 @@ class CTRLTokenizationTest(TokenizerTesterMixin, unittest.TestCase):
         with open(self.merges_file, "w", encoding="utf-8") as fp:
             fp.write("\n".join(merges))
 
+    @use_cache_if_possible
+    @lru_cache(maxsize=64)
     def get_tokenizer(self, **kwargs):
         kwargs.update(self.special_tokens_map)
         return CTRLTokenizer.from_pretrained(self.tmpdirname, **kwargs)

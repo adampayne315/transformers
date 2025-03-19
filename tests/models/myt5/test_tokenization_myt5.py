@@ -14,11 +14,12 @@
 # limitations under the License.
 import binascii
 import unittest
+from functools import lru_cache
 
 from transformers import MyT5Tokenizer
 from transformers.utils import is_tf_available, is_torch_available
 
-from ...test_tokenization_common import TokenizerTesterMixin, my_cache
+from ...test_tokenization_common import TokenizerTesterMixin, use_cache_if_possible
 
 
 if is_torch_available():
@@ -85,7 +86,6 @@ class TestByteRewriter(unittest.TestCase):
 
         self.assertEqual(decompose_rewriter.rewrite_bytes(in_hex), out_hex)
 
-from functools import cache, lru_cache
 
 class MyT5TokenizationTest(TokenizerTesterMixin, unittest.TestCase):
     tokenizer_class = MyT5Tokenizer
@@ -94,7 +94,7 @@ class MyT5TokenizationTest(TokenizerTesterMixin, unittest.TestCase):
     def setUp(self):
         super().setUp()
 
-    @my_cache
+    @use_cache_if_possible
     @lru_cache(maxsize=64)
     def get_tokenizer(self, **kwargs) -> MyT5Tokenizer:
         # breakpoint()

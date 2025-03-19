@@ -13,8 +13,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 import unittest
+from functools import lru_cache
 
-from tests.test_tokenization_common import TokenizerTesterMixin
+from tests.test_tokenization_common import TokenizerTesterMixin, use_cache_if_possible
 from transformers import SplinterTokenizerFast, is_tf_available, is_torch_available
 from transformers.models.splinter import SplinterTokenizer
 from transformers.testing_utils import get_tests_dir, slow
@@ -49,6 +50,8 @@ class SplinterTokenizationTest(TokenizerTesterMixin, unittest.TestCase):
         tokenizer.add_tokens("this is a test thou shall not determine rigor truly".split())
         tokenizer.save_pretrained(self.tmpdirname)
 
+    @use_cache_if_possible
+    @lru_cache(maxsize=64)
     def get_tokenizer(self, **kwargs) -> SplinterTokenizer:
         return self.tokenizer_class.from_pretrained(self.tmpdirname, **kwargs)
 
