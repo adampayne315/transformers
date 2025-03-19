@@ -4105,7 +4105,7 @@ class TokenizerTesterMixin:
     @use_cache_if_possible
     @lru_cache(maxsize=64)
     def get_rust_tokenizer_2(cls, pretrained_name, **kwargs) -> PreTrainedTokenizer:
-        return cls.tokenizer_class.from_pretrained(pretrained_name, **kwargs)
+        return cls.rust_tokenizer_class.from_pretrained(pretrained_name, **kwargs)
 
     @classmethod
     @use_cache_if_possible
@@ -4123,14 +4123,14 @@ class TokenizerTesterMixin:
                 # tokenizer_r = self.rust_tokenizer_class.from_pretrained(pretrained_name, **kwargs)
                 # tokenizer_p = self.tokenizer_class.from_pretrained(pretrained_name, **kwargs)
 
-                import datetime
-                s = datetime.datetime.now()
+                # import datetime
+                # s = datetime.datetime.now()
                 tokenizer_r = self.get_rust_tokenizer_2(pretrained_name, **kwargs)
                 tokenizer_p = self.get_py_tokenizer_2(pretrained_name, **kwargs)
-                e = datetime.datetime.now()
-                t = (e-s).total_seconds()
-                # breakpoint()
-                print(t)
+                # e = datetime.datetime.now()
+                # t = (e-s).total_seconds()
+                # # breakpoint()
+                # print(t)
 
                 # s = datetime.datetime.now()
                 # tokenizer_r = self.get_rust_tokenizer(pretrained_name, **kwargs)
