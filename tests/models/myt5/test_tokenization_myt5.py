@@ -94,11 +94,17 @@ class MyT5TokenizationTest(TokenizerTesterMixin, unittest.TestCase):
     def setUp(self):
         super().setUp()
 
+    # def tearDownClass(self):
+    #     # breakpoint()
+    #     self.get_tokenizers()
+    #     print(3)
+
+    @classmethod
     @use_cache_if_possible
     @lru_cache(maxsize=16)
-    def get_tokenizer(self, **kwargs) -> MyT5Tokenizer:
+    def get_tokenizer(cls, **kwargs) -> MyT5Tokenizer:
         # breakpoint()
-        return self.tokenizer_class.from_pretrained("Tomlim/myt5-base", **kwargs)
+        return cls.tokenizer_class.from_pretrained("Tomlim/myt5-base", **kwargs)
 
     @unittest.skip(reason="inputs cannot be pretokenized as ids depend on whole input string")
     def test_pretokenized_inputs(self):
