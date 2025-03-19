@@ -1626,6 +1626,11 @@ SCIPY_IMPORT_ERROR = """
 `pip install scipy`. Please note that you may need to restart your runtime after installation.
 """
 
+# docstyle-ignore
+KERAS_NLP_IMPORT_ERROR = """
+{0} requires the keras_nlp library but it was not found in your environment. You can install it with pip. 
+Please note that you may need to restart your runtime after installation.
+"""
 
 # docstyle-ignore
 SPEECH_IMPORT_ERROR = """
@@ -1786,6 +1791,7 @@ BACKENDS_MAPPING = OrderedDict(
         ("jinja", (is_jinja_available, JINJA_IMPORT_ERROR)),
         ("yt_dlp", (is_yt_dlp_available, YT_DLP_IMPORT_ERROR)),
         ("rich", (is_rich_available, RICH_IMPORT_ERROR)),
+        ("keras_nlp", (is_keras_nlp_available, KERAS_NLP_IMPORT_ERROR)),
     ]
 )
 
@@ -1980,12 +1986,12 @@ def direct_transformers_import(path: str, file="__init__.py") -> ModuleType:
     return module
 
 
-def export(*, backends=()):
+def requires(*, backends=()):
     """
     This decorator enables two things:
     - Attaching a `__backends` tuple to an object to see what are the necessary backends for it
       to execute correctly without instantiating it
-    - The '@export' string is used to dynamically import objects
+    - The '@requires' string is used to dynamically import objects
     """
     for backend in backends:
         if backend not in BACKENDS_MAPPING:
