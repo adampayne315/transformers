@@ -2167,12 +2167,12 @@ def create_import_structure_from_path(module_path):
         # Objects that have a `@require` assigned to them will get exported
         # with the backends specified in the decorator as well as the file backends.
         exported_objects = set()
-        if "@require" in file_content:
+        if "@requires" in file_content:
             lines = file_content.split("\n")
             for index, line in enumerate(lines):
                 # This allows exporting items with other decorators. We'll take a look
                 # at the line that follows at the same indentation level.
-                if line.startswith((" ", "\t", "@", ")")) and not line.startswith("@require"):
+                if line.startswith((" ", "\t", "@", ")")) and not line.startswith("@requires"):
                     continue
 
                 # Skipping line enables putting whatever we want between the
@@ -2180,7 +2180,7 @@ def create_import_structure_from_path(module_path):
                 # This is what enables having # Copied from statements, docs, etc.
                 skip_line = False
 
-                if "@require" in previous_line:
+                if "@requires" in previous_line:
                     skip_line = False
 
                     # Backends are defined on the same line as export
