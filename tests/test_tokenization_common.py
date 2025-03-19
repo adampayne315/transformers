@@ -24,6 +24,7 @@ import tempfile
 import traceback
 import unittest
 from collections import OrderedDict
+from functools import cache, lru_cache
 from itertools import takewhile
 from pathlib import Path
 from typing import TYPE_CHECKING, Any, Dict, List, Tuple, Union
@@ -267,6 +268,7 @@ class TokenizerTesterMixin:
         else:
             raise ValueError("This tokenizer class has no tokenizer to be tested.")
 
+    @cache
     def get_tokenizer(self, **kwargs) -> PreTrainedTokenizer:
         return self.tokenizer_class.from_pretrained(self.tmpdirname, **kwargs)
 
