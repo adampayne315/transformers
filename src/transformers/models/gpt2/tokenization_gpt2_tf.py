@@ -12,7 +12,7 @@ if is_keras_nlp_available():
     from keras_nlp.tokenizers import BytePairTokenizer
 
 
-@requires(backends=('keras_nlp'))
+@requires(backends=('keras_nlp',))
 class TFGPT2Tokenizer(keras.layers.Layer):
     """
     This is an in-graph tokenizer for GPT2. It should be initialized similarly to other tokenizers, using the
