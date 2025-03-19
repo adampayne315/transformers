@@ -103,7 +103,7 @@ class MyT5TokenizationTest(TokenizerTesterMixin, unittest.TestCase):
 
     @classmethod
     @use_cache_if_possible
-    @lru_cache(maxsize=8)
+    @lru_cache(maxsize=1)
     def get_tokenizer(cls, **kwargs) -> MyT5Tokenizer:
         return cls.tokenizer_class.from_pretrained("Tomlim/myt5-base", **kwargs)
 
