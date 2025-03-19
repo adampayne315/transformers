@@ -421,7 +421,7 @@ class TokenizerTesterMixin:
     # TODO: this test can be combined with `test_sentencepiece_tokenize_and_convert_tokens_to_string` after the latter is extended to all tokenizers.
     def test_tokenize_special_tokens(self):
         """Test `tokenize` with special tokens."""
-        tokenizers = self.get_tokenizers(fast=True, do_lower_case=True)
+        tokenizers = self.get_tokenizers(fast=True, do_lower_case=True, use_cache=False)
         for tokenizer in tokenizers:
             with self.subTest(f"{tokenizer.__class__.__name__}"):
                 SPECIAL_TOKEN_1 = "[SPECIAL_TOKEN_1]"
@@ -750,7 +750,7 @@ class TokenizerTesterMixin:
 
                 shutil.rmtree(tmpdirname)
 
-        tokenizers = self.get_tokenizers(model_max_length=42)
+        tokenizers = self.get_tokenizers(model_max_length=42, use_cache=False)
         for tokenizer in tokenizers:
             with self.subTest(f"{tokenizer.__class__.__name__}"):
                 # Isolate this from the other tests because we save additional tokens/etc
@@ -784,7 +784,7 @@ class TokenizerTesterMixin:
                 shutil.rmtree(tmpdirname)
 
         # Test that we can also use the non-legacy saving format for fast tokenizers
-        tokenizers = self.get_tokenizers(model_max_length=42)
+        tokenizers = self.get_tokenizers(model_max_length=42, use_cache=False)
         for tokenizer in tokenizers:
             if not tokenizer.is_fast:
                 continue
@@ -847,7 +847,7 @@ class TokenizerTesterMixin:
         self.assertEqual(tok1.__getstate__(), tok2.__getstate__())
 
     def test_added_tokens_do_lower_case(self):
-        tokenizers = self.get_tokenizers(do_lower_case=True)
+        tokenizers = self.get_tokenizers(do_lower_case=True, use_cache=False)
         for tokenizer in tokenizers:
             with self.subTest(f"{tokenizer.__class__.__name__}"):
                 if not hasattr(tokenizer, "do_lower_case") or not tokenizer.do_lower_case:
@@ -885,7 +885,7 @@ class TokenizerTesterMixin:
                 for special_token in tokenizer.all_special_tokens:
                     self.assertTrue(special_token in tokenized_sequence or special_token.lower() in tokenized_sequence)
 
-        tokenizers = self.get_tokenizers(do_lower_case=True)
+        tokenizers = self.get_tokenizers(do_lower_case=True, use_cache=False)
         for tokenizer in tokenizers:
             with self.subTest(f"{tokenizer.__class__.__name__}"):
                 if hasattr(tokenizer, "do_lower_case") and tokenizer.do_lower_case:
@@ -915,7 +915,7 @@ class TokenizerTesterMixin:
 
     # TODO @ArthurZ Nuke this
     def test_add_tokens_tokenizer(self):
-        tokenizers = self.get_tokenizers(do_lower_case=False)
+        tokenizers = self.get_tokenizers(do_lower_case=False, use_cache=False)
         for tokenizer in tokenizers:
             with self.subTest(f"{tokenizer.__class__.__name__}"):
                 vocab_size = tokenizer.vocab_size
@@ -1015,7 +1015,7 @@ class TokenizerTesterMixin:
 
     @require_tokenizers
     def test_encode_decode_with_spaces(self):
-        tokenizers = self.get_tokenizers(do_lower_case=False, fast=False)
+        tokenizers = self.get_tokenizers(do_lower_case=False, fast=False, use_cache=False)
         for tokenizer in tokenizers:
             with self.subTest(f"{tokenizer.__class__.__name__}"):
                 new_toks = [
@@ -2683,7 +2683,7 @@ class TokenizerTesterMixin:
                 self.assertFalse(new_tokenizer.init_kwargs["random_argument"])
 
     def test_get_vocab(self):
-        tokenizers = self.get_tokenizers(do_lower_case=False)
+        tokenizers = self.get_tokenizers(do_lower_case=False, use_cache=False)
         for tokenizer in tokenizers:
             with self.subTest(f"{tokenizer.__class__.__name__}"):
                 vocab_dict = tokenizer.get_vocab()
@@ -2801,7 +2801,7 @@ class TokenizerTesterMixin:
         if not self.test_slow_tokenizer:
             self.skipTest(reason="This test is only for slow tokenizers")
 
-        tokenizers = self.get_tokenizers(fast=False, use_cache=False)
+        tokenizers = self.get_tokenizers(fast=False, use_cache=False, use_cache=False)
         for tokenizer in tokenizers:
             with self.subTest(f"{tokenizer.__class__.__name__}"):
                 try:
@@ -2827,7 +2827,7 @@ class TokenizerTesterMixin:
     @require_tokenizers
     def test_added_token_serializable(self):
         # TODO this is tested 10_000 times....
-        tokenizers = self.get_tokenizers(do_lower_case=False)
+        tokenizers = self.get_tokenizers(do_lower_case=False, use_cache=False)
         for tokenizer in tokenizers:
             with self.subTest(f"{tokenizer.__class__.__name__}"):
                 new_token = AddedToken("new_token", lstrip=True)
