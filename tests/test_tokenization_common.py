@@ -69,6 +69,26 @@ if is_torch_available():
 if TYPE_CHECKING:
     from transformers import PretrainedConfig, PreTrainedModel, TFPreTrainedModel
 
+import functools
+def my_cache(func):
+
+    @functools.wraps(func)
+    def wrapper(*args, **kwargs):
+
+        # if len(args) == 0:
+        #     return func(*args, **kwargs)
+        # first_arg = args[0]
+        # if "testMethod=" not in repr(args[0]):
+        #     return func(*args, **kwargs)
+        # If it's a test method call: the first arg is `self` that is hashable
+        if any(not arg.__hash__ for arg in args):
+            return func(*args, **kwargs)
+        elif any(not kwarg.__hash__ for kwarg in kwargs.values()):
+            return func(*args, **kwargs)
+
+        return functools.cache(func)(*args, **kwargs)
+
+    return wrapper
 
 logger = logging.get_logger(__name__)
 
@@ -268,7 +288,7 @@ class TokenizerTesterMixin:
         else:
             raise ValueError("This tokenizer class has no tokenizer to be tested.")
 
-    @cache
+    @my_cache
     def get_tokenizer(self, **kwargs) -> PreTrainedTokenizer:
         return self.tokenizer_class.from_pretrained(self.tmpdirname, **kwargs)
 
