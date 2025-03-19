@@ -218,32 +218,34 @@ class TokenizerTesterMixin:
     # test_sentencepiece must also be set to True
     test_sentencepiece_ignore_case = False
 
-    def setUp(self) -> None:
+    @classmethod
+    def setUpClass(cls) -> None:
         # Tokenizer.filter makes it possible to filter which Tokenizer to case based on all the
         # information available in Tokenizer (name, rust class, python class, vocab key name)
-        self.from_pretrained_id = (
-            [self.from_pretrained_id] if isinstance(self.from_pretrained_id, str) else self.from_pretrained_id
+        cls.from_pretrained_id = (
+            [cls.from_pretrained_id] if isinstance(cls.from_pretrained_id, str) else cls.from_pretrained_id
         )
 
-        self.tokenizers_list = []
-        if self.test_rust_tokenizer:
-            self.tokenizers_list = [
+        cls.tokenizers_list = []
+        if cls.test_rust_tokenizer:
+            cls.tokenizers_list = [
                 (
-                    self.rust_tokenizer_class,
+                    cls.rust_tokenizer_class,
                     pretrained_id,
-                    self.from_pretrained_kwargs if self.from_pretrained_kwargs is not None else {},
+                    cls.from_pretrained_kwargs if cls.from_pretrained_kwargs is not None else {},
                 )
-                for pretrained_id in self.from_pretrained_id
+                for pretrained_id in cls.from_pretrained_id
             ]
         else:
-            self.tokenizers_list = []
+            cls.tokenizers_list = []
         with open(f"{get_tests_dir()}/fixtures/sample_text.txt", encoding="utf-8") as f_data:
-            self._data = f_data.read().replace("\n\n", "\n").strip()
+            cls._data = f_data.read().replace("\n\n", "\n").strip()
 
-        self.tmpdirname = tempfile.mkdtemp()
+        cls.tmpdirname = tempfile.mkdtemp()
 
-    def tearDown(self):
-        shutil.rmtree(self.tmpdirname)
+    @classmethod
+    def tearDownClass(cls):
+        shutil.rmtree(cls.tmpdirname)
 
     def get_input_output_texts(self, tokenizer):
         input_txt = self.get_clean_sequence(tokenizer)[0]
@@ -287,10 +289,11 @@ class TokenizerTesterMixin:
         else:
             raise ValueError("This tokenizer class has no tokenizer to be tested.")
 
+    @classmethod
     @use_cache_if_possible
     @lru_cache(maxsize=64)
-    def get_tokenizer(self, **kwargs) -> PreTrainedTokenizer:
-        return self.tokenizer_class.from_pretrained(self.tmpdirname, **kwargs)
+    def get_tokenizer(cls, **kwargs) -> PreTrainedTokenizer:
+        return cls.tokenizer_class.from_pretrained(cls.tmpdirname, **kwargs)
 
     def get_rust_tokenizer(self, **kwargs) -> PreTrainedTokenizerFast:
         return self.rust_tokenizer_class.from_pretrained(self.tmpdirname, **kwargs)
