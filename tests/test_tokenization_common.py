@@ -74,12 +74,13 @@ if TYPE_CHECKING:
 def use_cache_if_possible(func):
     @functools.wraps(func)
     def wrapper(*args, **kwargs):
-        use_cache = kwargs.pop("use_cache", False)
+        use_cache = kwargs.pop("use_cache", True)
 
         underline_func = func
         if "functools" in str(func):
             underline_func = func.__wrapped__
 
+        # breakpoint()
         if not use_cache:
             return underline_func(*args, **kwargs)
         if any(not arg.__hash__ for arg in args):
@@ -223,6 +224,7 @@ class TokenizerTesterMixin:
 
     @classmethod
     def setUpClass(cls) -> None:
+        # breakpoint()
         # Tokenizer.filter makes it possible to filter which Tokenizer to case based on all the
         # information available in Tokenizer (name, rust class, python class, vocab key name)
         cls.from_pretrained_id = (
@@ -245,6 +247,8 @@ class TokenizerTesterMixin:
             cls._data = f_data.read().replace("\n\n", "\n").strip()
 
         cls.tmpdirname = tempfile.mkdtemp()
+        # breakpoint()
+        print(3)
 
     @classmethod
     def tearDownClass(cls):
@@ -4097,6 +4101,18 @@ class TokenizerTesterMixin:
                     input_r, input_p, max_length, pad_token_id, model_main_input_name="inputs"
                 )
 
+    @classmethod
+    @use_cache_if_possible
+    @lru_cache(maxsize=64)
+    def get_rust_tokenizer(cls, pretrained_name, **kwargs) -> PreTrainedTokenizer:
+        return cls.tokenizer_class.from_pretrained(pretrained_name, **kwargs)
+
+    @classmethod
+    @use_cache_if_possible
+    @lru_cache(maxsize=64)
+    def get_py_tokenizer(cls, pretrained_name, **kwargs) -> PreTrainedTokenizer:
+        return cls.tokenizer_class.from_pretrained(pretrained_name, **kwargs)
+
     def test_save_pretrained(self):
         if not self.test_slow_tokenizer:
             # as we don't have a slow version, we can't compare the outputs between slow and fast versions
@@ -4104,8 +4120,33 @@ class TokenizerTesterMixin:
 
         for tokenizer, pretrained_name, kwargs in self.tokenizers_list:
             with self.subTest(f"{tokenizer.__class__.__name__} ({pretrained_name})"):
-                tokenizer_r = self.rust_tokenizer_class.from_pretrained(pretrained_name, **kwargs)
-                tokenizer_p = self.tokenizer_class.from_pretrained(pretrained_name, **kwargs)
+                # tokenizer_r = self.rust_tokenizer_class.from_pretrained(pretrained_name, **kwargs)
+                # tokenizer_p = self.tokenizer_class.from_pretrained(pretrained_name, **kwargs)
+
+                import datetime
+                s = datetime.datetime.now()
+                tokenizer_r = self.get_rust_tokenizer(pretrained_name, **kwargs)
+                tokenizer_p = self.get_py_tokenizer(pretrained_name, **kwargs)
+                e = datetime.datetime.now()
+                t = (e-s).total_seconds()
+                # breakpoint()
+                print(t)
+
+                # s = datetime.datetime.now()
+                # tokenizer_r = self.get_rust_tokenizer(pretrained_name, **kwargs)
+                # tokenizer_p = self.get_py_tokenizer(pretrained_name, **kwargs)
+                # e = datetime.datetime.now()
+                # t = (e-s).total_seconds()
+                # breakpoint()
+                # print(t)
+                #
+                # s = datetime.datetime.now()
+                # tokenizer_r = self.get_rust_tokenizer(pretrained_name, **kwargs)
+                # tokenizer_p = self.get_py_tokenizer(pretrained_name, **kwargs)
+                # e = datetime.datetime.now()
+                # t = (e-s).total_seconds()
+                # breakpoint()
+                # print(t)
 
                 tmpdirname2 = tempfile.mkdtemp()
 
