@@ -81,12 +81,20 @@ def my_cache(func):
         # if "testMethod=" not in repr(args[0]):
         #     return func(*args, **kwargs)
         # If it's a test method call: the first arg is `self` that is hashable
-        if any(not arg.__hash__ for arg in args):
-            return func(*args, **kwargs)
-        elif any(not kwarg.__hash__ for kwarg in kwargs.values()):
-            return func(*args, **kwargs)
+        # breakpoint()
+        # breakpoint()
 
-        return functools.cache(func)(*args, **kwargs)
+        underline_func = func
+        if "functools" in str(func):
+            underline_func = func.__wrapped__
+
+        if any(not arg.__hash__ for arg in args):
+            return underline_func(*args, **kwargs)
+        elif any(not kwarg.__hash__ for kwarg in kwargs.values()):
+            return underline_func(*args, **kwargs)
+
+        # func is always the same, but we are calling cache on it everytime which gives new stuff!
+        return func(*args, **kwargs)
 
     return wrapper
 
@@ -289,6 +297,7 @@ class TokenizerTesterMixin:
             raise ValueError("This tokenizer class has no tokenizer to be tested.")
 
     @my_cache
+    @cache
     def get_tokenizer(self, **kwargs) -> PreTrainedTokenizer:
         return self.tokenizer_class.from_pretrained(self.tmpdirname, **kwargs)
 
