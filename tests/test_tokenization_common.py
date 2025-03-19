@@ -2801,7 +2801,7 @@ class TokenizerTesterMixin:
         if not self.test_slow_tokenizer:
             self.skipTest(reason="This test is only for slow tokenizers")
 
-        tokenizers = self.get_tokenizers(fast=False, use_cache=False, use_cache=False)
+        tokenizers = self.get_tokenizers(fast=False, use_cache=False)
         for tokenizer in tokenizers:
             with self.subTest(f"{tokenizer.__class__.__name__}"):
                 try:
