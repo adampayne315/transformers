@@ -63,9 +63,6 @@ class CodeLlamaTokenizationTest(TokenizerTesterMixin, unittest.TestCase):
         tokenizer.pad_token = tokenizer.eos_token
         tokenizer.save_pretrained(cls.tmpdirname)
 
-    @classmethod
-    @use_cache_if_possible
-    @lru_cache(maxsize=64)
     def get_tokenizers(cls, **kwargs):
         kwargs.update({"pad_token": "<PAD>"})
         return super().get_tokenizers(**kwargs)
