@@ -18,6 +18,7 @@ tokenization_utils_fast.py
 """
 
 import bisect
+import copy
 import itertools
 import re
 import unicodedata
@@ -419,6 +420,8 @@ class PreTrainedTokenizer(PreTrainedTokenizerBase):
     """
 
     def __init__(self, **kwargs):
+        kwargs = copy.deepcopy(kwargs)
+
         # 1. Init the parent class
 
         self.tokens_trie = Trie()
