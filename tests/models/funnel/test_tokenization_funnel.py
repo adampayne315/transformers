@@ -55,10 +55,11 @@ class FunnelTokenizationTest(TokenizerTesterMixin, unittest.TestCase):
         with open(self.vocab_file, "w", encoding="utf-8") as vocab_writer:
             vocab_writer.write("".join([x + "\n" for x in vocab_tokens]))
 
+    @classmethod
     @use_cache_if_possible
     @lru_cache(maxsize=64)
-    def get_tokenizer(self, **kwargs):
-        return FunnelTokenizer.from_pretrained(self.tmpdirname, **kwargs)
+    def get_tokenizer(cls, **kwargs):
+        return FunnelTokenizer.from_pretrained(cls.tmpdirname, **kwargs)
 
     def get_rust_tokenizer(self, **kwargs):
         return FunnelTokenizerFast.from_pretrained(self.tmpdirname, **kwargs)

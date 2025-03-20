@@ -65,10 +65,11 @@ class MarianTokenizationTest(TokenizerTesterMixin, unittest.TestCase):
         tokenizer = MarianTokenizer.from_pretrained(self.tmpdirname)
         tokenizer.save_pretrained(self.tmpdirname)
 
+    @classmethod
     @use_cache_if_possible
     @lru_cache(maxsize=64)
-    def get_tokenizer(self, **kwargs) -> MarianTokenizer:
-        return MarianTokenizer.from_pretrained(self.tmpdirname, **kwargs)
+    def get_tokenizer(cls, **kwargs) -> MarianTokenizer:
+        return MarianTokenizer.from_pretrained(cls.tmpdirname, **kwargs)
 
     def get_input_output_texts(self, tokenizer):
         return (

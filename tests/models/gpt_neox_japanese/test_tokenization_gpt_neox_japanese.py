@@ -72,11 +72,12 @@ class GPTNeoXJapaneseTokenizationTest(TokenizerTesterMixin, unittest.TestCase):
         with open(self.emoji_file, "w") as emoji_writer:
             emoji_writer.write(json.dumps(emoji_tokens))
 
+    @classmethod
     @use_cache_if_possible
     @lru_cache(maxsize=64)
-    def get_tokenizer(self, **kwargs):
-        kwargs.update(self.special_tokens_map)
-        return GPTNeoXJapaneseTokenizer.from_pretrained(self.tmpdirname, **kwargs)
+    def get_tokenizer(cls, **kwargs):
+        kwargs.update(cls.special_tokens_map)
+        return GPTNeoXJapaneseTokenizer.from_pretrained(cls.tmpdirname, **kwargs)
 
     def get_input_output_texts(self, tokenizer):
         input_text = "こんにちは、世界。 \nこんばんは、㔺界。😀"

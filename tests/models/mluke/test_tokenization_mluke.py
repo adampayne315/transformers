@@ -39,10 +39,11 @@ class MLukeTokenizerTest(TokenizerTesterMixin, unittest.TestCase):
 
         self.special_tokens_map = {"entity_token_1": "<ent>", "entity_token_2": "<ent2>"}
 
+    @classmethod
     @use_cache_if_possible
     @lru_cache(maxsize=64)
-    def get_tokenizer(self, task=None, **kwargs):
-        kwargs.update(self.special_tokens_map)
+    def get_tokenizer(cls, task=None, **kwargs):
+        kwargs.update(cls.special_tokens_map)
         kwargs.update({"task": task})
         tokenizer = MLukeTokenizer(vocab_file=SAMPLE_VOCAB, entity_vocab_file=SAMPLE_ENTITY_VOCAB, **kwargs)
         return tokenizer

@@ -52,13 +52,14 @@ class VitsTokenizerTest(TokenizerTesterMixin, unittest.TestCase):
         with open(self.vocab_file, "w", encoding="utf-8") as fp:
             fp.write(json.dumps(vocab_tokens) + "\n")
 
+    @classmethod
     @use_cache_if_possible
     @lru_cache(maxsize=64)
-    def get_tokenizer(self, **kwargs):
-        kwargs.update(self.special_tokens_map)
+    def get_tokenizer(cls, **kwargs):
+        kwargs.update(cls.special_tokens_map)
         kwargs["phonemize"] = False
         kwargs["normalize"] = False
-        return VitsTokenizer.from_pretrained(self.tmpdirname, **kwargs)
+        return VitsTokenizer.from_pretrained(cls.tmpdirname, **kwargs)
 
     def get_clean_sequence(self, tokenizer, with_prefix_space=False, max_length=20, min_length=5):
         txt = "beyonce lives in los angeles"

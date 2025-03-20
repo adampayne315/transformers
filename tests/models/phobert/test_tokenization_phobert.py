@@ -45,11 +45,12 @@ class PhobertTokenizationTest(TokenizerTesterMixin, unittest.TestCase):
         with open(self.merges_file, "w", encoding="utf-8") as fp:
             fp.write("\n".join(merges))
 
+    @classmethod
     @use_cache_if_possible
     @lru_cache(maxsize=64)
-    def get_tokenizer(self, **kwargs):
-        kwargs.update(self.special_tokens_map)
-        return PhobertTokenizer.from_pretrained(self.tmpdirname, **kwargs)
+    def get_tokenizer(cls, **kwargs):
+        kwargs.update(cls.special_tokens_map)
+        return PhobertTokenizer.from_pretrained(cls.tmpdirname, **kwargs)
 
     def get_input_output_texts(self, tokenizer):
         input_text = "Tôi là VinAI Research"

@@ -137,10 +137,11 @@ class SiglipTokenizationTest(TokenizerTesterMixin, unittest.TestCase):
         return SiglipTokenizer.from_pretrained("google/siglip-base-patch16-224")
 
     # Copied from tests.models.t5.test_tokenization_t5.T5TokenizationTest.get_tokenizer with T5->Siglip
+    @classmethod
     @use_cache_if_possible
     @lru_cache(maxsize=64)
-    def get_tokenizer(self, **kwargs) -> SiglipTokenizer:
-        return self.tokenizer_class.from_pretrained(self.tmpdirname, **kwargs)
+    def get_tokenizer(cls, **kwargs) -> SiglipTokenizer:
+        return cls.tokenizer_class.from_pretrained(cls.tmpdirname, **kwargs)
 
     # Copied from tests.models.t5.test_tokenization_t5.T5TokenizationTest.test_rust_and_python_full_tokenizers with T5->Siglip
     def test_rust_and_python_full_tokenizers(self):

@@ -50,10 +50,11 @@ class SplinterTokenizationTest(TokenizerTesterMixin, unittest.TestCase):
         tokenizer.add_tokens("this is a test thou shall not determine rigor truly".split())
         tokenizer.save_pretrained(self.tmpdirname)
 
+    @classmethod
     @use_cache_if_possible
     @lru_cache(maxsize=64)
-    def get_tokenizer(self, **kwargs) -> SplinterTokenizer:
-        return self.tokenizer_class.from_pretrained(self.tmpdirname, **kwargs)
+    def get_tokenizer(cls, **kwargs) -> SplinterTokenizer:
+        return cls.tokenizer_class.from_pretrained(cls.tmpdirname, **kwargs)
 
     def get_rust_tokenizer(self, **kwargs) -> SplinterTokenizerFast:
         return self.rust_tokenizer_class.from_pretrained(self.tmpdirname, **kwargs)

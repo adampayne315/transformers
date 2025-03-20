@@ -47,11 +47,12 @@ class BartphoTokenizerTest(TokenizerTesterMixin, unittest.TestCase):
         tokenizer = BartphoTokenizer(SAMPLE_VOCAB, self.monolingual_vocab_file, **self.special_tokens_map)
         tokenizer.save_pretrained(self.tmpdirname)
 
+    @classmethod
     @use_cache_if_possible
     @lru_cache(maxsize=64)
-    def get_tokenizer(self, **kwargs):
-        kwargs.update(self.special_tokens_map)
-        return BartphoTokenizer.from_pretrained(self.tmpdirname, **kwargs)
+    def get_tokenizer(cls, **kwargs):
+        kwargs.update(cls.special_tokens_map)
+        return BartphoTokenizer.from_pretrained(cls.tmpdirname, **kwargs)
 
     def get_input_output_texts(self, tokenizer):
         input_text = "This is a là test"

@@ -71,11 +71,12 @@ class Wav2Vec2TokenizerTest(unittest.TestCase):
         with open(self.vocab_file, "w", encoding="utf-8") as fp:
             fp.write(json.dumps(vocab_tokens) + "\n")
 
+    @classmethod
     @use_cache_if_possible
     @lru_cache(maxsize=64)
-    def get_tokenizer(self, **kwargs):
-        kwargs.update(self.special_tokens_map)
-        return Wav2Vec2Tokenizer.from_pretrained(self.tmpdirname, **kwargs)
+    def get_tokenizer(cls, **kwargs):
+        kwargs.update(cls.special_tokens_map)
+        return Wav2Vec2Tokenizer.from_pretrained(cls.tmpdirname, **kwargs)
 
     def test_tokenizer_decode(self):
         # TODO(PVP) - change to facebook
@@ -389,11 +390,12 @@ class Wav2Vec2CTCTokenizerTest(TokenizerTesterMixin, unittest.TestCase):
         with open(self.vocab_file, "w", encoding="utf-8") as fp:
             fp.write(json.dumps(vocab_tokens) + "\n")
 
+    @classmethod
     @use_cache_if_possible
     @lru_cache(maxsize=64)
-    def get_tokenizer(self, **kwargs):
-        kwargs.update(self.special_tokens_map)
-        return Wav2Vec2CTCTokenizer.from_pretrained(self.tmpdirname, **kwargs)
+    def get_tokenizer(cls, **kwargs):
+        kwargs.update(cls.special_tokens_map)
+        return Wav2Vec2CTCTokenizer.from_pretrained(cls.tmpdirname, **kwargs)
 
     def test_tokenizer_add_token_chars(self):
         tokenizer = self.tokenizer_class.from_pretrained("facebook/wav2vec2-base-960h")

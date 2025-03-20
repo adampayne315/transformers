@@ -73,11 +73,12 @@ class ClvpTokenizationTest(TokenizerTesterMixin, unittest.TestCase):
             fp.write("\n".join(merges))
 
     # Copied from transformers.tests.models.gpt2.test_tokenization_gpt2.GPT2TokenizationTest.get_tokenizer with GPT2->Clvp
+    @classmethod
     @use_cache_if_possible
     @lru_cache(maxsize=64)
-    def get_tokenizer(self, **kwargs):
-        kwargs.update(self.special_tokens_map)
-        return ClvpTokenizer.from_pretrained(self.tmpdirname, **kwargs)
+    def get_tokenizer(cls, **kwargs):
+        kwargs.update(cls.special_tokens_map)
+        return ClvpTokenizer.from_pretrained(cls.tmpdirname, **kwargs)
 
     # Copied from transformers.tests.models.gpt2.test_tokenization_gpt2.GPT2TokenizationTest.get_input_output_texts
     def get_input_output_texts(self, tokenizer):

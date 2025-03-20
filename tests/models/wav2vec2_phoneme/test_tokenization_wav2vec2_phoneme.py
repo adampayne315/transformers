@@ -85,11 +85,12 @@ class Wav2Vec2PhonemeCTCTokenizerTest(TokenizerTesterMixin, unittest.TestCase):
         output_ids = tokenizer.encode(output_txt, add_special_tokens=False)
         return output_txt, output_ids
 
+    @classmethod
     @use_cache_if_possible
     @lru_cache(maxsize=64)
-    def get_tokenizer(self, **kwargs):
-        kwargs.update(self.special_tokens_map)
-        return Wav2Vec2PhonemeCTCTokenizer.from_pretrained(self.tmpdirname, **kwargs)
+    def get_tokenizer(cls, **kwargs):
+        kwargs.update(cls.special_tokens_map)
+        return Wav2Vec2PhonemeCTCTokenizer.from_pretrained(cls.tmpdirname, **kwargs)
 
     def test_tokenizer_add_new_tokens(self):
         tokenizer = self.tokenizer_class.from_pretrained("facebook/wav2vec2-lv-60-espeak-cv-ft")

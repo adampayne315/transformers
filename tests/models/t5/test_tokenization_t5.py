@@ -146,10 +146,11 @@ class T5TokenizationTest(TokenizerTesterMixin, unittest.TestCase):
     def t5_base_tokenizer_fast(self):
         return T5TokenizerFast.from_pretrained("google-t5/t5-base")
 
+    @classmethod
     @use_cache_if_possible
     @lru_cache(maxsize=64)
-    def get_tokenizer(self, **kwargs) -> T5Tokenizer:
-        return self.tokenizer_class.from_pretrained(self.tmpdirname, **kwargs)
+    def get_tokenizer(cls, **kwargs) -> T5Tokenizer:
+        return cls.tokenizer_class.from_pretrained(cls.tmpdirname, **kwargs)
 
     def get_rust_tokenizer(self, **kwargs) -> T5TokenizerFast:
         return self.rust_tokenizer_class.from_pretrained(self.tmpdirname, **kwargs)

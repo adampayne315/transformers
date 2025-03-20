@@ -50,10 +50,11 @@ class PerceiverTokenizationTest(TokenizerTesterMixin, unittest.TestCase):
     def perceiver_tokenizer(self):
         return PerceiverTokenizer.from_pretrained("deepmind/language-perceiver")
 
+    @classmethod
     @use_cache_if_possible
     @lru_cache(maxsize=64)
-    def get_tokenizer(self, **kwargs) -> PerceiverTokenizer:
-        return self.tokenizer_class.from_pretrained(self.tmpdirname, **kwargs)
+    def get_tokenizer(cls, **kwargs) -> PerceiverTokenizer:
+        return cls.tokenizer_class.from_pretrained(cls.tmpdirname, **kwargs)
 
     def get_clean_sequence(self, tokenizer, with_prefix_space=False, max_length=20, min_length=5) -> Tuple[str, list]:
         # XXX The default common tokenizer tests assume that every ID is decodable on its own.

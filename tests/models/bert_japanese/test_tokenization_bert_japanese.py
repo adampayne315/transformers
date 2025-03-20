@@ -418,10 +418,11 @@ class BertJapaneseCharacterTokenizationTest(TokenizerTesterMixin, unittest.TestC
         with open(self.vocab_file, "w", encoding="utf-8") as vocab_writer:
             vocab_writer.write("".join([x + "\n" for x in vocab_tokens]))
 
+    @classmethod
     @use_cache_if_possible
     @lru_cache(maxsize=64)
-    def get_tokenizer(self, **kwargs):
-        return BertJapaneseTokenizer.from_pretrained(self.tmpdirname, subword_tokenizer_type="character", **kwargs)
+    def get_tokenizer(cls, **kwargs):
+        return BertJapaneseTokenizer.from_pretrained(cls.tmpdirname, subword_tokenizer_type="character", **kwargs)
 
     def get_input_output_texts(self, tokenizer):
         input_text = "こんにちは、世界。 \nこんばんは、世界。"

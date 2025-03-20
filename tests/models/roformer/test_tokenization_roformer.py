@@ -35,10 +35,11 @@ class RoFormerTokenizationTest(TokenizerTesterMixin, unittest.TestCase):
     def setUp(self):
         super().setUp()
 
+    @classmethod
     @use_cache_if_possible
     @lru_cache(maxsize=64)
-    def get_tokenizer(self, **kwargs):
-        return self.tokenizer_class.from_pretrained("junnyu/roformer_chinese_base", **kwargs)
+    def get_tokenizer(cls, **kwargs):
+        return cls.tokenizer_class.from_pretrained("junnyu/roformer_chinese_base", **kwargs)
 
     def get_rust_tokenizer(self, **kwargs):
         return self.rust_tokenizer_class.from_pretrained("junnyu/roformer_chinese_base", **kwargs)

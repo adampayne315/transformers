@@ -40,15 +40,17 @@ class ESMTokenizationTest(unittest.TestCase):
         with open(self.vocab_file, "w", encoding="utf-8") as vocab_writer:
             vocab_writer.write("".join([x + "\n" for x in vocab_tokens]))
 
+    @classmethod
     @use_cache_if_possible
     @lru_cache(maxsize=64)
-    def get_tokenizers(self, **kwargs) -> List[PreTrainedTokenizerBase]:
-        return [self.get_tokenizer(**kwargs)]
+    def get_tokenizers(cls, **kwargs) -> List[PreTrainedTokenizerBase]:
+        return [cls.get_tokenizer(**kwargs)]
 
+    @classmethod
     @use_cache_if_possible
     @lru_cache(maxsize=64)
-    def get_tokenizer(self, **kwargs) -> PreTrainedTokenizer:
-        return self.tokenizer_class.from_pretrained(self.tmpdirname, **kwargs)
+    def get_tokenizer(cls, **kwargs) -> PreTrainedTokenizer:
+        return cls.tokenizer_class.from_pretrained(cls.tmpdirname, **kwargs)
 
     def test_tokenizer_single_example(self):
         tokenizer = self.tokenizer_class(self.vocab_file)
