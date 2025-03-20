@@ -33,8 +33,9 @@ class VitsTokenizerTest(TokenizerTesterMixin, unittest.TestCase):
     tokenizer_class = VitsTokenizer
     test_rust_tokenizer = False
 
-    def setUp(self):
-        super().setUp()
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
 
         vocab = (
             "k ' z y u d h e s w – 3 c p - 1 j m i X f l o 0 b r a 4 2 n _ x v t q 5 6 g ț ţ < > | <pad> <unk>".split(
@@ -45,11 +46,11 @@ class VitsTokenizerTest(TokenizerTesterMixin, unittest.TestCase):
         vocab_tokens[" "] = vocab_tokens["X"]
         del vocab_tokens["X"]
 
-        self.special_tokens_map = {"pad_token": "<pad>", "unk_token": "<unk>"}
+        cls.special_tokens_map = {"pad_token": "<pad>", "unk_token": "<unk>"}
 
-        self.tmpdirname = tempfile.mkdtemp()
-        self.vocab_file = os.path.join(self.tmpdirname, VOCAB_FILES_NAMES["vocab_file"])
-        with open(self.vocab_file, "w", encoding="utf-8") as fp:
+        cls.tmpdirname = tempfile.mkdtemp()
+        cls.vocab_file = os.path.join(cls.tmpdirname, VOCAB_FILES_NAMES["vocab_file"])
+        with open(cls.vocab_file, "w", encoding="utf-8") as fp:
             fp.write(json.dumps(vocab_tokens) + "\n")
 
     @classmethod
