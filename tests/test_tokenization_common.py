@@ -304,8 +304,11 @@ class TokenizerTesterMixin:
     def get_tokenizer(cls, **kwargs) -> PreTrainedTokenizer:
         return cls.tokenizer_class.from_pretrained(cls.tmpdirname, **kwargs)
 
-    def get_rust_tokenizer(self, **kwargs) -> PreTrainedTokenizerFast:
-        return self.rust_tokenizer_class.from_pretrained(self.tmpdirname, **kwargs)
+    @classmethod
+    @use_cache_if_possible
+    @lru_cache(maxsize=64)
+    def get_rust_tokenizer(cls, **kwargs) -> PreTrainedTokenizerFast:
+        return cls.rust_tokenizer_class.from_pretrained(cls.tmpdirname, **kwargs)
 
     def tokenizer_integration_test_util(
         self,

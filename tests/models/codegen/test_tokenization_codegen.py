@@ -82,9 +82,12 @@ class CodeGenTokenizationTest(TokenizerTesterMixin, unittest.TestCase):
         kwargs.update(cls.special_tokens_map)
         return CodeGenTokenizer.from_pretrained(cls.tmpdirname, **kwargs)
 
-    def get_rust_tokenizer(self, **kwargs):
-        kwargs.update(self.special_tokens_map)
-        return CodeGenTokenizerFast.from_pretrained(self.tmpdirname, **kwargs)
+    @classmethod
+    @use_cache_if_possible
+    @lru_cache(maxsize=64)
+    def get_rust_tokenizer(cls, **kwargs):
+        kwargs.update(cls.special_tokens_map)
+        return CodeGenTokenizerFast.from_pretrained(cls.tmpdirname, **kwargs)
 
     def get_input_output_texts(self, tokenizer):
         input_text = "lower newer"
