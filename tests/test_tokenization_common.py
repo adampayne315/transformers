@@ -1114,7 +1114,8 @@ class TokenizerTesterMixin:
             {"role": "assistant", "content": "assistant message"},
         ]
         expected_output = "systemsystem messageuseruser messageassistantassistant message"
-        tokenizers = self.get_tokenizers()
+        # `apply_chat_template` seems to modify `tokenizer`
+        tokenizers = self.get_tokenizers(use_cache=False)
         for tokenizer in tokenizers:
             with self.subTest(f"{tokenizer.__class__.__name__}"):
                 output = tokenizer.apply_chat_template(
@@ -1578,7 +1579,7 @@ class TokenizerTesterMixin:
             {"role": "user", "content": "user message"},
             {"role": "assistant", "content": "assistant message "},  # Note the trailing whitespace
         ]
-        tokenizers = self.get_tokenizers()
+        tokenizers = self.get_tokenizers(use_cache=False)
         for tokenizer in tokenizers:
             with self.subTest(f"{tokenizer.__class__.__name__}"):
                 output = tokenizer.apply_chat_template(
@@ -1612,7 +1613,7 @@ class TokenizerTesterMixin:
             {"role": "user", "content": "hi 1"},
             {"role": "assistant", "content": "bye: "},
         ]
-        tokenizers = self.get_tokenizers()
+        tokenizers = self.get_tokenizers(use_cache=False)
         for tokenizer in tokenizers:
             with self.subTest(f"{tokenizer.__class__.__name__}"):
                 prefill_output = tokenizer.apply_chat_template(
