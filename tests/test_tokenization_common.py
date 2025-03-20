@@ -88,7 +88,9 @@ def use_cache_if_possible(func):
         elif any(not kwarg.__hash__ for kwarg in kwargs.values()):
             return underline_func(*args, **kwargs)
 
-        return func(*args, **kwargs)
+        import copy
+        # return func(*args, **kwargs)
+        return copy.deepcopy(func(*args, **kwargs))
 
     return wrapper
 
@@ -1115,7 +1117,7 @@ class TokenizerTesterMixin:
         ]
         expected_output = "systemsystem messageuseruser messageassistantassistant message"
         # TODO (ydshieh): why we have side-effect if using cache for `SeamlessM4TTokenizationTest`
-        tokenizers = self.get_tokenizers(use_cache=False)
+        tokenizers = self.get_tokenizers()
         for tokenizer in tokenizers:
             with self.subTest(f"{tokenizer.__class__.__name__}"):
                 output = tokenizer.apply_chat_template(
@@ -1185,7 +1187,7 @@ class TokenizerTesterMixin:
             ],
         ]
         # TODO (ydshieh): why we have side-effect if using cache for `SeamlessM4TTokenizationTest`
-        tokenizers = self.get_tokenizers(use_cache=False)
+        tokenizers = self.get_tokenizers()
         for tokenizer in tokenizers:
             with self.subTest(f"{tokenizer.__class__.__name__}"):
                 output = tokenizer.apply_chat_template(
