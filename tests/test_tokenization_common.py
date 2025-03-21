@@ -2089,7 +2089,7 @@ class TokenizerTesterMixin:
         if self.rust_tokenizer_class is not None:
             pretrained_name = self.from_pretrained_id
 
-            slow_tokenizer = self.tokenizer_class.from_pretrained(pretrained_name, legacy=False)
+            slow_tokenizer = self.get_tokenizer(pretrained_name, legacy=False)
             with self.subTest(f"{pretrained_name}"):
                 rust_tokenizer = self.get_rust_tokenizer(
                     pretrained_name, from_slow=True, legacy=False
@@ -2258,10 +2258,10 @@ class TokenizerTesterMixin:
                     )
 
                 if self.test_slow_tokenizer:
-                    tokenizer_p = self.tokenizer_class.from_pretrained(pretrained_name, padding_side="left", **kwargs)
+                    tokenizer_p = self.get_tokenizer(pretrained_name, padding_side="left", **kwargs)
                     self.assertEqual(tokenizer_p.padding_side, "left")
 
-                    tokenizer_p = self.tokenizer_class.from_pretrained(pretrained_name, padding_side="right", **kwargs)
+                    tokenizer_p = self.get_tokenizer(pretrained_name, padding_side="right", **kwargs)
                     self.assertEqual(tokenizer_p.padding_side, "right")
 
                     self.assertRaises(
@@ -2295,12 +2295,12 @@ class TokenizerTesterMixin:
                     )
 
                 if self.test_slow_tokenizer:
-                    tokenizer_p = self.tokenizer_class.from_pretrained(
+                    tokenizer_p = self.get_tokenizer(
                         pretrained_name, truncation_side="left", **kwargs
                     )
                     self.assertEqual(tokenizer_p.truncation_side, "left")
 
-                    tokenizer_p = self.tokenizer_class.from_pretrained(
+                    tokenizer_p = self.get_tokenizer(
                         pretrained_name, truncation_side="right", **kwargs
                     )
                     self.assertEqual(tokenizer_p.truncation_side, "right")
@@ -4300,7 +4300,7 @@ class TokenizerTesterMixin:
                     tokenizer_cr = self.get_rust_tokenizer(
                         pretrained_name, additional_special_tokens=added_tokens, **kwargs, from_slow=True
                     )
-                    tokenizer_p = self.tokenizer_class.from_pretrained(
+                    tokenizer_p = self.get_tokenizer(
                         pretrained_name, additional_special_tokens=added_tokens, **kwargs
                     )
 
@@ -4614,7 +4614,7 @@ class TokenizerTesterMixin:
                 tokenizer_rust = self.get_rust_tokenizer(
                     pretrained_name, additional_special_tokens=[special_token], split_special_tokens=True, **kwargs
                 )
-                tokenizer_py = self.tokenizer_class.from_pretrained(
+                tokenizer_py = self.get_tokenizer(
                     pretrained_name, additional_special_tokens=[special_token], split_special_tokens=True, **kwargs
                 )
 
@@ -4673,7 +4673,7 @@ class TokenizerTesterMixin:
         for tokenizer, pretrained_name, kwargs in self.tokenizers_list:
             with self.subTest(f"{tokenizer.__class__.__name__} ({pretrained_name})"):
                 # Load a slow tokenizer from the hub, init with the new token for fast to also include it
-                tokenizer = self.tokenizer_class.from_pretrained(pretrained_name, eos_token=new_eos)
+                tokenizer = self.get_tokenizer(pretrained_name, eos_token=new_eos)
                 EXPECTED_ADDED_TOKENS_DECODER = tokenizer.added_tokens_decoder
                 with self.subTest("Hub -> Slow: Test loading a slow tokenizer from the hub)"):
                     self.assertEqual(tokenizer._special_tokens_map["eos_token"], new_eos)
