@@ -1119,7 +1119,6 @@ class TokenizerTesterMixin:
             {"role": "assistant", "content": "assistant message"},
         ]
         expected_output = "systemsystem messageuseruser messageassistantassistant message"
-        # TODO (ydshieh): why we have side-effect if using cache for `SeamlessM4TTokenizationTest`
         tokenizers = self.get_tokenizers()
         for tokenizer in tokenizers:
             with self.subTest(f"{tokenizer.__class__.__name__}"):
@@ -1189,7 +1188,6 @@ class TokenizerTesterMixin:
                 {"role": "assistant", "content": "assistant message 2"},
             ],
         ]
-        # TODO (ydshieh): why we have side-effect if using cache for `SeamlessM4TTokenizationTest`
         tokenizers = self.get_tokenizers()
         for tokenizer in tokenizers:
             with self.subTest(f"{tokenizer.__class__.__name__}"):
