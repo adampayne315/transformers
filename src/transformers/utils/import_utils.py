@@ -2081,6 +2081,7 @@ def create_import_structure_from_path(module_path):
        - If a file is named like `modeling_tf_*.py`, it will have a `tf` backend
        - If a file is named like `modeling_flax_*.py`, it will have a `flax` backend
        - If a file is named like `tokenization_*_fast.py`, it will have a `tokenizers` backend
+       - If a file is named like `image_processing*_fast.py`, it will have a `torchvision` + `torch` backend
 
     Backends serve the purpose of displaying a clear error message to the user in case the backends are not installed.
     Should an object be imported without its required backends being in the environment, any attempt to use the
