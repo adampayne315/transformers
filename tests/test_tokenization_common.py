@@ -1302,7 +1302,7 @@ class TokenizerTesterMixin:
                 if not self.test_rust_tokenizer:
                     self.skipTest(reason="No fast tokenizer defined")
 
-                tokenizer_r = self.rust_tokenizer_class.from_pretrained(pretrained_name)
+                tokenizer_r = self.get_rust_tokenizer(pretrained_name)
                 self._check_no_pad_token_padding(tokenizer_r, conversations)
 
                 tokenizer_r.padding_side = "right"
@@ -1485,7 +1485,7 @@ class TokenizerTesterMixin:
                 if not self.test_rust_tokenizer:
                     self.skipTest(reason="No fast tokenizer defined")
 
-                tokenizer_r = self.rust_tokenizer_class.from_pretrained(pretrained_name)
+                tokenizer_r = self.get_rust_tokenizer(pretrained_name)
 
                 # Find where to truncate, as the amount of tokens is different for different tokenizers and I want the
                 # truncation to happen in the middle of the assistant content.
@@ -2091,7 +2091,7 @@ class TokenizerTesterMixin:
 
             slow_tokenizer = self.tokenizer_class.from_pretrained(pretrained_name, legacy=False)
             with self.subTest(f"{pretrained_name}"):
-                rust_tokenizer = self.rust_tokenizer_class.from_pretrained(
+                rust_tokenizer = self.get_rust_tokenizer(
                     pretrained_name, from_slow=True, legacy=False
                 )
                 input_full_vocab_ids = list(
@@ -2239,12 +2239,12 @@ class TokenizerTesterMixin:
         for tokenizer, pretrained_name, kwargs in self.tokenizers_list:
             with self.subTest(f"{tokenizer.__class__.__name__} ({pretrained_name})"):
                 if self.test_rust_tokenizer:
-                    tokenizer_r = self.rust_tokenizer_class.from_pretrained(
+                    tokenizer_r = self.get_rust_tokenizer(
                         pretrained_name, padding_side="left", **kwargs
                     )
                     self.assertEqual(tokenizer_r.padding_side, "left")
 
-                    tokenizer_r = self.rust_tokenizer_class.from_pretrained(
+                    tokenizer_r = self.get_rust_tokenizer(
                         pretrained_name, padding_side="right", **kwargs
                     )
                     self.assertEqual(tokenizer_r.padding_side, "right")
@@ -2276,12 +2276,12 @@ class TokenizerTesterMixin:
         for tokenizer, pretrained_name, kwargs in self.tokenizers_list:
             with self.subTest(f"{tokenizer.__class__.__name__} ({pretrained_name})"):
                 if self.test_rust_tokenizer:
-                    tokenizer_r = self.rust_tokenizer_class.from_pretrained(
+                    tokenizer_r = self.get_rust_tokenizer(
                         pretrained_name, truncation_side="left", **kwargs
                     )
                     self.assertEqual(tokenizer_r.truncation_side, "left")
 
-                    tokenizer_r = self.rust_tokenizer_class.from_pretrained(
+                    tokenizer_r = self.get_rust_tokenizer(
                         pretrained_name, truncation_side="right", **kwargs
                     )
                     self.assertEqual(tokenizer_r.truncation_side, "right")
@@ -3640,7 +3640,7 @@ class TokenizerTesterMixin:
         This needs to be padded so that it can represented as a tensor
         """
         for tokenizer, pretrained_name, kwargs in self.tokenizers_list:
-            tokenizer = self.rust_tokenizer_class.from_pretrained(pretrained_name, **kwargs)
+            tokenizer = self.get_rust_tokenizer(pretrained_name, **kwargs)
 
             with self.subTest(f"{tokenizer.__class__.__name__} ({pretrained_name}, {tokenizer.__class__.__name__})"):
                 if is_torch_available():
@@ -4286,7 +4286,7 @@ class TokenizerTesterMixin:
         for tokenizer, pretrained_name, kwargs in self.tokenizers_list:
             with self.subTest(f"{tokenizer.__class__.__name__} ({pretrained_name})"):
                 added_tokens = [AddedToken("<special>", lstrip=True)]
-                tokenizer_r = self.rust_tokenizer_class.from_pretrained(
+                tokenizer_r = self.get_rust_tokenizer(
                     pretrained_name, additional_special_tokens=added_tokens, **kwargs
                 )
                 r_output = tokenizer_r.encode("Hey this is a <special> token")
@@ -4297,7 +4297,7 @@ class TokenizerTesterMixin:
 
                 if self.test_slow_tokenizer:
                     # in rust fast, you lose the information of the AddedToken when initializing with `additional_special_tokens`
-                    tokenizer_cr = self.rust_tokenizer_class.from_pretrained(
+                    tokenizer_cr = self.get_rust_tokenizer(
                         pretrained_name, additional_special_tokens=added_tokens, **kwargs, from_slow=True
                     )
                     tokenizer_p = self.tokenizer_class.from_pretrained(
@@ -4549,7 +4549,7 @@ class TokenizerTesterMixin:
             with self.subTest(f"{tokenizer.__class__.__name__} ({pretrained_name})"):
                 with tempfile.TemporaryDirectory() as tmp_dir:
                     # Save the fast tokenizer files in a temporary directory
-                    tokenizer_old = self.rust_tokenizer_class.from_pretrained(pretrained_name, **kwargs, use_fast=True)
+                    tokenizer_old = self.get_rust_tokenizer(pretrained_name, **kwargs, use_fast=True)
                     tokenizer_old.save_pretrained(tmp_dir, legacy_format=False)  # save only fast version
 
                     # Initialize toy model for the trainer
@@ -4583,13 +4583,13 @@ class TokenizerTesterMixin:
                 with tempfile.TemporaryDirectory() as tmp_dir_1:
                     # Here we check that even if we have initialized a fast tokenizer with a tokenizer_file we can
                     # still save only the slow version and use these saved files to rebuild a tokenizer
-                    tokenizer_fast_old_1 = self.rust_tokenizer_class.from_pretrained(
+                    tokenizer_fast_old_1 = self.get_rust_tokenizer(
                         pretrained_name, **kwargs, use_fast=True
                     )
                     tokenizer_file = os.path.join(tmp_dir_1, "tokenizer.json")
                     tokenizer_fast_old_1.backend_tokenizer.save(tokenizer_file)
 
-                    tokenizer_fast_old_2 = self.rust_tokenizer_class.from_pretrained(
+                    tokenizer_fast_old_2 = self.get_rust_tokenizer(
                         pretrained_name, **kwargs, use_fast=True, tokenizer_file=tokenizer_file
                     )
 
@@ -4611,7 +4611,7 @@ class TokenizerTesterMixin:
             special_token = "<my_new_token>"
             special_sentence = f"Hey this is a {special_token} token"
             with self.subTest(f"{tokenizer.__class__.__name__} ({pretrained_name})"):
-                tokenizer_rust = self.rust_tokenizer_class.from_pretrained(
+                tokenizer_rust = self.get_rust_tokenizer(
                     pretrained_name, additional_special_tokens=[special_token], split_special_tokens=True, **kwargs
                 )
                 tokenizer_py = self.tokenizer_class.from_pretrained(
@@ -4713,7 +4713,7 @@ class TokenizerTesterMixin:
 
                 with self.subTest("Hub -> Fast: Test loading a fast tokenizer from the hub)"):
                     if self.rust_tokenizer_class is not None:
-                        tokenizer_fast = self.rust_tokenizer_class.from_pretrained(pretrained_name, eos_token=new_eos)
+                        tokenizer_fast = self.get_rust_tokenizer(pretrained_name, eos_token=new_eos)
                         self.assertEqual(tokenizer_fast._special_tokens_map["eos_token"], new_eos)
                         self.assertIn(new_eos, list(tokenizer_fast.added_tokens_decoder.values()))
                         # We can't test the following because for BC we kept the default rstrip lstrip in slow not fast. Will comment once normalization is alright
