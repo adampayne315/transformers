@@ -41,19 +41,20 @@ class SplinterTokenizationTest(TokenizerTesterMixin, unittest.TestCase):
     pre_trained_model_path = "tau/splinter-base"
 
     # Copied from transformers.models.siglip.SiglipTokenizationTest.setUp
-    def setUp(self):
-        super().setUp()
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
         tokenizer = SplinterTokenizer(SAMPLE_VOCAB)
         tokenizer.vocab["[UNK]"] = len(tokenizer.vocab)
         tokenizer.vocab["[QUESTION]"] = len(tokenizer.vocab)
         tokenizer.vocab["."] = len(tokenizer.vocab)
         tokenizer.add_tokens("this is a test thou shall not determine rigor truly".split())
-        tokenizer.save_pretrained(self.tmpdirname)
+        tokenizer.save_pretrained(cls.tmpdirname)
 
     @classmethod
     @use_cache_if_possible
     @lru_cache(maxsize=64)
-    def get_tokenizer(cls, pretrained_name, **kwargs) -> SplinterTokenizer:
+    def get_tokenizer(cls, pretrained_name=None, **kwargs) -> SplinterTokenizer:
         pretrained_name = pretrained_name or cls.tmpdirname
         return cls.tokenizer_class.from_pretrained(pretrained_name, **kwargs)
 
