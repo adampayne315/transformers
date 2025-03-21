@@ -7,8 +7,10 @@ from tensorflow_text import FastBertTokenizer, ShrinkLongestTrimmer, case_fold_u
 
 from ...modeling_tf_utils import keras
 from .tokenization_bert import BertTokenizer
+from ...utils.import_utils import requires
 
 
+@requires(backends=('tf',))
 class TFBertTokenizer(keras.layers.Layer):
     """
     This is an in-graph tokenizer for BERT. It should be initialized similarly to other tokenizers, using the

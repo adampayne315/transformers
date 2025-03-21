@@ -40,7 +40,7 @@ from ...utils import (
     logging,
 )
 from .image_processing_deformable_detr import get_size_with_aspect_ratio
-
+from ...utils.import_utils import requires
 
 if is_torch_available():
     import torch
@@ -288,6 +288,7 @@ def prepare_coco_panoptic_annotation(
             Whether to return segmentation masks.
     """,
 )
+@requires(backends=('torch',))
 class DeformableDetrImageProcessorFast(BaseImageProcessorFast):
     resample = PILImageResampling.BILINEAR
     image_mean = IMAGENET_DEFAULT_MEAN

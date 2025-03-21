@@ -22,6 +22,7 @@ __version__ = "4.50.0.dev0"
 
 from typing import TYPE_CHECKING
 
+from .utils.import_utils import define_import_structure
 # Check the dependencies satisfy the minimal versions required.
 from . import dependency_versions_check
 from .utils import (
@@ -51,7 +52,6 @@ from .utils import (
 
 logger = logging.get_logger(__name__)  # pylint: disable=invalid-name
 
-from transformers.models import *
 
 # Base objects, independent of any specific backend
 _import_structure = {
@@ -491,6 +491,7 @@ _import_structure = {
     "models.gpt2": [
         "GPT2Config",
         "GPT2Tokenizer",
+        "TFGPT2Tokenizer"
     ],
     "models.gpt_bigcode": ["GPTBigCodeConfig"],
     "models.gpt_neo": ["GPTNeoConfig"],
@@ -6409,13 +6410,7 @@ if TYPE_CHECKING:
     else:
         from .models.bert import TFBertTokenizer
 
-    try:
-        if not is_keras_nlp_available():
-            raise OptionalDependencyNotAvailable()
-    except OptionalDependencyNotAvailable:
-        from .utils.dummy_keras_nlp_objects import *
-    else:
-        from .models.gpt2 import TFGPT2Tokenizer
+    from .models.gpt2 import TFGPT2Tokenizer
 
     try:
         if not is_vision_available():

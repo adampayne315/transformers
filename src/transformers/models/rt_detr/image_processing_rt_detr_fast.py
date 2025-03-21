@@ -40,7 +40,7 @@ from ...utils import (
     requires_backends,
 )
 from .image_processing_rt_detr import get_size_with_aspect_ratio
-
+from ...utils.import_utils import requires
 
 if is_torch_available():
     import torch
@@ -145,6 +145,7 @@ def prepare_coco_detection_annotation(
             Whether to return segmentation masks.
     """,
 )
+@requires(backends=('torchvision', "torch"))
 class RTDetrImageProcessorFast(BaseImageProcessorFast):
     resample = PILImageResampling.BILINEAR
     image_mean = IMAGENET_DEFAULT_MEAN

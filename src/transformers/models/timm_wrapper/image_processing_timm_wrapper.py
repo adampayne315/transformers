@@ -34,7 +34,7 @@ if is_torch_available():
 
 logger = logging.get_logger(__name__)
 
-
+@requires(backends=('torch',))
 class TimmWrapperImageProcessor(BaseImageProcessor):
     """
     Wrapper class for timm models to be used within transformers.
