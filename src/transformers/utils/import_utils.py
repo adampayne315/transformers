@@ -2012,7 +2012,8 @@ BASE_FILE_REQUIREMENTS = {
     lambda e: "modeling_flax_" in e: ("flax",),
     lambda e: "modeling_" in e: ("torch",),
     lambda e: e.startswith("tokenization_") and e.endswith("_fast"): ("tokenizers",),
-    lambda e: e.startswith("image_processing_") and e.endswith("_fast"): ("torch", "torchvision"),
+    lambda e: e.startswith("image_processing_") and e.endswith("_fast"): ("vision", "torch", "torchvision"),
+    lambda e: e.startswith("image_processing_"): ("vision",),
 }
 
 
