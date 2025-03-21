@@ -33,10 +33,11 @@ class CanineTokenizationTest(TokenizerTesterMixin, unittest.TestCase):
     tokenizer_class = CanineTokenizer
     test_rust_tokenizer = False
 
-    def setUp(self):
-        super().setUp()
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
         tokenizer = CanineTokenizer()
-        tokenizer.save_pretrained(self.tmpdirname)
+        tokenizer.save_pretrained(cls.tmpdirname)
 
     @cached_property
     def canine_tokenizer(self):

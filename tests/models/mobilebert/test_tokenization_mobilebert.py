@@ -41,8 +41,9 @@ class MobileBERTTokenizationTest(TokenizerTesterMixin, unittest.TestCase):
     from_pretrained_filter = filter_non_english
     pre_trained_model_path = "google/mobilebert-uncased"
 
-    def setUp(self):
-        super().setUp()
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
 
         vocab_tokens = [
             "[UNK]",
@@ -61,13 +62,13 @@ class MobileBERTTokenizationTest(TokenizerTesterMixin, unittest.TestCase):
             "low",
             "lowest",
         ]
-        self.vocab_file = os.path.join(self.tmpdirname, VOCAB_FILES_NAMES["vocab_file"])
-        with open(self.vocab_file, "w", encoding="utf-8") as vocab_writer:
+        cls.vocab_file = os.path.join(cls.tmpdirname, VOCAB_FILES_NAMES["vocab_file"])
+        with open(cls.vocab_file, "w", encoding="utf-8") as vocab_writer:
             vocab_writer.write("".join([x + "\n" for x in vocab_tokens]))
 
-        self.tokenizers_list = [
-            (tokenizer_def[0], self.pre_trained_model_path, tokenizer_def[2])  # else the 'google/' prefix is stripped
-            for tokenizer_def in self.tokenizers_list
+        cls.tokenizers_list = [
+            (tokenizer_def[0], cls.pre_trained_model_path, tokenizer_def[2])  # else the 'google/' prefix is stripped
+            for tokenizer_def in cls.tokenizers_list
         ]
 
     # Copied from tests.models.bert.test_tokenization_bert.BertTokenizationTest.get_input_output_texts

@@ -91,9 +91,6 @@ class MyT5TokenizationTest(TokenizerTesterMixin, unittest.TestCase):
     tokenizer_class = MyT5Tokenizer
     test_rust_tokenizer = False
 
-    def setUp(self):
-        super().setUp()
-
     @classmethod
     def tearDownClass(cls):
         # breakpoint()

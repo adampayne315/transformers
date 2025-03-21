@@ -39,11 +39,12 @@ class RemBertTokenizationTest(TokenizerTesterMixin, unittest.TestCase):
     test_sentencepiece_ignore_case = True
     pre_trained_model_path = "google/rembert"
 
-    def setUp(self):
-        super().setUp()
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
 
         tokenizer = RemBertTokenizer(SAMPLE_VOCAB)
-        tokenizer.save_pretrained(self.tmpdirname)
+        tokenizer.save_pretrained(cls.tmpdirname)
 
     # Copied from ReformerTokenizationTest.get_input_output_texts
     def get_input_output_texts(self, tokenizer):

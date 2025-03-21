@@ -41,8 +41,9 @@ class BertTokenizationTest(TokenizerTesterMixin, unittest.TestCase):
     space_between_special_tokens = True
     from_pretrained_filter = filter_non_english
 
-    def setUp(self):
-        super().setUp()
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
 
         vocab_tokens = ["[UNK]", "[CLS]", "[SEP]", "[PAD]", "[MASK]", "你", "好", "是", "谁", "a", "b", "c", "d"]
         word_shape = {}
@@ -50,14 +51,14 @@ class BertTokenizationTest(TokenizerTesterMixin, unittest.TestCase):
         for i, value in enumerate(vocab_tokens):
             word_shape[value] = i
             word_pronunciation[value] = i
-        self.vocab_file = os.path.join(self.tmpdirname, VOCAB_FILES_NAMES["vocab_file"])
-        self.word_shape_file = os.path.join(self.tmpdirname, VOCAB_FILES_NAMES["word_shape_file"])
-        self.word_pronunciation_file = os.path.join(self.tmpdirname, VOCAB_FILES_NAMES["word_pronunciation_file"])
-        with open(self.vocab_file, "w", encoding="utf-8") as vocab_writer:
+        cls.vocab_file = os.path.join(cls.tmpdirname, VOCAB_FILES_NAMES["vocab_file"])
+        cls.word_shape_file = os.path.join(cls.tmpdirname, VOCAB_FILES_NAMES["word_shape_file"])
+        cls.word_pronunciation_file = os.path.join(cls.tmpdirname, VOCAB_FILES_NAMES["word_pronunciation_file"])
+        with open(cls.vocab_file, "w", encoding="utf-8") as vocab_writer:
             vocab_writer.write("".join([x + "\n" for x in vocab_tokens]))
-        with open(self.word_shape_file, "w", encoding="utf-8") as word_shape_writer:
+        with open(cls.word_shape_file, "w", encoding="utf-8") as word_shape_writer:
             json.dump(word_shape, word_shape_writer, ensure_ascii=False)
-        with open(self.word_pronunciation_file, "w", encoding="utf-8") as word_pronunciation_writer:
+        with open(cls.word_pronunciation_file, "w", encoding="utf-8") as word_pronunciation_writer:
             json.dump(word_pronunciation, word_pronunciation_writer, ensure_ascii=False)
 
     def test_full_tokenizer(self):
