@@ -20,10 +20,9 @@
 
 __version__ = "4.50.0.dev0"
 
-from typing import TYPE_CHECKING
 from pathlib import Path
+from typing import TYPE_CHECKING
 
-from .utils.import_utils import define_import_structure
 # Check the dependencies satisfy the minimal versions required.
 from . import dependency_versions_check
 from .utils import (
@@ -49,6 +48,7 @@ from .utils import (
     is_vision_available,
     logging,
 )
+from .utils.import_utils import define_import_structure
 
 
 logger = logging.get_logger(__name__)  # pylint: disable=invalid-name
@@ -562,8 +562,6 @@ else:
 # Direct imports for type-checking
 if TYPE_CHECKING:
     # All modeling imports
-    from .models import *
-
     # Agents
     from .agents import (
         Agent,
@@ -664,6 +662,7 @@ if TYPE_CHECKING:
         load_tf2_model_in_pytorch_model,
         load_tf2_weights_in_pytorch_model,
     )
+    from .models import *
 
     # Pipelines
     from .pipelines import (
@@ -1041,7 +1040,7 @@ else:
 
     _import_structure = {k: set(v) for k, v in _import_structure.items()}
 
-    import_structure = define_import_structure(Path(__file__).parent / 'models', prefix='models')
+    import_structure = define_import_structure(Path(__file__).parent / "models", prefix="models")
     import_structure[frozenset({})].update(_import_structure)
 
     sys.modules[__name__] = _LazyModule(

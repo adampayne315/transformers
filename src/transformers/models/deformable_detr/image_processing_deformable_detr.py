@@ -66,6 +66,7 @@ from ...utils import (
 )
 from ...utils.import_utils import requires
 
+
 if is_torch_available():
     import torch
     from torch import nn
@@ -799,7 +800,7 @@ def compute_segments(
     return segmentation, segments
 
 
-@requires(backends=('torch',))
+@requires(backends=("torch",))
 class DeformableDetrImageProcessor(BaseImageProcessor):
     r"""
     Constructs a Deformable DETR image processor.

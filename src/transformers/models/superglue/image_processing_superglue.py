@@ -37,6 +37,7 @@ from ...image_utils import (
 from ...utils import TensorType, logging, requires_backends
 from ...utils.import_utils import requires
 
+
 if is_torch_available():
     import torch
 
@@ -131,7 +132,7 @@ def validate_and_format_image_pairs(images: ImageInput):
     raise ValueError(error_message)
 
 
-@requires(backends=('torch',))
+@requires(backends=("torch",))
 class SuperGlueImageProcessor(BaseImageProcessor):
     r"""
     Constructs a SuperGlue image processor.

@@ -26,10 +26,11 @@ from ...feature_extraction_utils import BatchFeature
 from ...utils import TensorType, logging
 from ...utils.import_utils import requires
 
+
 logger = logging.get_logger(__name__)
 
 
-@requires(backends=('torch',))
+@requires(backends=("torch",))
 class ClapFeatureExtractor(SequenceFeatureExtractor):
     r"""
     Constructs a CLAP feature extractor.

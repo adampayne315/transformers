@@ -14,7 +14,7 @@
 
 # fmt: off
 
-from transformers.utils.import_utils import export
+from transformers.utils.import_utils import requires
 
 
 @requires(backends=("torch", "torch"))
@@ -54,7 +54,7 @@ def c2():
     pass
 
 
-@export(
+@requires(
     backends=(
         "torch",
         "torch"
@@ -66,7 +66,7 @@ class C3:
         pass
 
 
-@export(
+@requires(
     backends=(
         "torch",
         "torch"

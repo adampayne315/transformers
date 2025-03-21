@@ -25,6 +25,7 @@ from ...tokenization_utils import AddedToken, BatchEncoding, PaddingStrategy, Pr
 from ...utils import TensorType, is_pretty_midi_available, logging, requires_backends, to_numpy
 from ...utils.import_utils import requires
 
+
 if is_pretty_midi_available():
     import pretty_midi
 
@@ -59,7 +60,7 @@ def token_note_to_note(number, current_velocity, default_velocity, note_onsets_r
     return notes
 
 
-@requires(backends=('essentia', 'librosa', 'pretty_midi', 'scipy', 'torch'))
+@requires(backends=("essentia", "librosa", "pretty_midi", "scipy", "torch"))
 class Pop2PianoTokenizer(PreTrainedTokenizer):
     """
     Constructs a Pop2Piano tokenizer. This tokenizer does not require training.

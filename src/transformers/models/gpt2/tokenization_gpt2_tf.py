@@ -4,15 +4,16 @@ from typing import Dict, List, Union
 import tensorflow as tf
 from tensorflow_text import pad_model_inputs
 
-from ...utils.import_utils import requires, is_keras_nlp_available
 from ...modeling_tf_utils import keras
+from ...utils.import_utils import is_keras_nlp_available, requires
 from .tokenization_gpt2 import GPT2Tokenizer
+
 
 if is_keras_nlp_available():
     from keras_nlp.tokenizers import BytePairTokenizer
 
 
-@requires(backends=('keras_nlp',))
+@requires(backends=("keras_nlp",))
 class TFGPT2Tokenizer(keras.layers.Layer):
     """
     This is an in-graph tokenizer for GPT2. It should be initialized similarly to other tokenizers, using the

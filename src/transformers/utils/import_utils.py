@@ -1628,7 +1628,7 @@ SCIPY_IMPORT_ERROR = """
 
 # docstyle-ignore
 KERAS_NLP_IMPORT_ERROR = """
-{0} requires the keras_nlp library but it was not found in your environment. You can install it with pip. 
+{0} requires the keras_nlp library but it was not found in your environment. You can install it with pip.
 Please note that you may need to restart your runtime after installation.
 """
 

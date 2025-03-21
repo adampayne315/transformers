@@ -56,13 +56,14 @@ from ...utils import (
     is_vision_available,
     logging,
 )
+from ...utils.import_utils import requires
 from .image_processing_detr import (
     compute_segments,
     convert_segmentation_to_rle,
     get_size_with_aspect_ratio,
     remove_low_and_no_objects,
 )
-from ...utils.import_utils import requires
+
 
 if is_torch_available():
     import torch
@@ -313,7 +314,7 @@ class DetrFastImageProcessorKwargs(DefaultFastImageProcessorKwargs):
             Whether to return segmentation masks.
     """,
 )
-@requires(backends=('torchvision', "torch"))
+@requires(backends=("torchvision", "torch"))
 class DetrImageProcessorFast(BaseImageProcessorFast):
     resample = PILImageResampling.BILINEAR
     image_mean = IMAGENET_DEFAULT_MEAN

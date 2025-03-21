@@ -26,7 +26,7 @@ from ...utils import TensorType
 from ...utils.import_utils import requires
 
 
-@requires(backends=('essentia', 'librosa', 'pretty_midi', 'scipy', 'torch'))
+@requires(backends=("essentia", "librosa", "pretty_midi", "scipy", "torch"))
 class Pop2PianoProcessor(ProcessorMixin):
     r"""
     Constructs an Pop2Piano processor which wraps a Pop2Piano Feature Extractor and Pop2Piano Tokenizer into a single

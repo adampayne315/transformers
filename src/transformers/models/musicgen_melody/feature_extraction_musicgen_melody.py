@@ -27,6 +27,7 @@ from ...feature_extraction_utils import BatchFeature
 from ...utils import TensorType, is_torch_available, is_torchaudio_available, logging
 from ...utils.import_utils import requires
 
+
 if is_torch_available():
     import torch
 
@@ -36,7 +37,7 @@ if is_torchaudio_available():
 logger = logging.get_logger(__name__)
 
 
-@requires(backends=('torchaudio',))
+@requires(backends=("torchaudio",))
 class MusicgenMelodyFeatureExtractor(SequenceFeatureExtractor):
     r"""
     Constructs a MusicgenMelody feature extractor.
