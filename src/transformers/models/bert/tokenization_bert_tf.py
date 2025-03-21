@@ -10,7 +10,7 @@ from .tokenization_bert import BertTokenizer
 from ...utils.import_utils import requires
 
 
-@requires(backends=('tf',))
+@requires(backends=('tf', "tensorflow_text"))
 class TFBertTokenizer(keras.layers.Layer):
     """
     This is an in-graph tokenizer for BERT. It should be initialized similarly to other tokenizers, using the

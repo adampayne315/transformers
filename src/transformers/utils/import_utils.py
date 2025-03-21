@@ -2357,7 +2357,7 @@ def spread_import_structure(nested_import_structure):
     return flattened_import_structure
 
 
-def define_import_structure(module_path: str) -> IMPORT_STRUCTURE_T:
+def define_import_structure(module_path: str, prefix: str = None) -> IMPORT_STRUCTURE_T:
     """
     This method takes a module_path as input and creates an import structure digestible by a _LazyModule.
 
@@ -2377,9 +2377,16 @@ def define_import_structure(module_path: str) -> IMPORT_STRUCTURE_T:
     }
 
     The import structure is a dict defined with frozensets as keys, and dicts of strings to sets of objects.
+
+    If `prefix` is not None, it will add that prefix to all keys in the returned dict.
     """
     import_structure = create_import_structure_from_path(module_path)
-    return spread_import_structure(import_structure)
+    spread_dict = spread_import_structure(import_structure)
+
+    if prefix is None:
+        return spread_dict
+    else:
+        return {k: {f"{prefix}.{kk}": vv for kk, vv in v.items()} for k, v in spread_dict.items()}
 
 
 def clear_import_cache():

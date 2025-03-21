@@ -59,7 +59,7 @@ def token_note_to_note(number, current_velocity, default_velocity, note_onsets_r
     return notes
 
 
-@requires(backends=('pretty_midi',))
+@requires(backends=('essentia', 'librosa', 'pretty_midi', 'scipy', 'torch'))
 class Pop2PianoTokenizer(PreTrainedTokenizer):
     """
     Constructs a Pop2Piano tokenizer. This tokenizer does not require training.
