@@ -87,7 +87,7 @@ class CLIPTokenizationTest(TokenizerTesterMixin, unittest.TestCase):
     def test_check_encoding_slow_fast(self):
         for tokenizer, pretrained_name, kwargs in self.tokenizers_list:
             with self.subTest(f"{tokenizer.__class__.__name__} ({pretrained_name})"):
-                tokenizer_s = self.tokenizer_class.from_pretrained(pretrained_name, **kwargs)
+                tokenizer_s = self.get_tokenizer(pretrained_name, **kwargs)
                 tokenizer_r = self.get_rust_tokenizer(pretrained_name, **kwargs)
 
                 text = "A\n'll 11p223RF☆ho!!to?'d'd''d of a cat to-$''d."

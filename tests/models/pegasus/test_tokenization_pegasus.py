@@ -77,7 +77,7 @@ class PegasusTokenizationTest(TokenizerTesterMixin, unittest.TestCase):
 
     def test_mask_tokens_rust_pegasus(self):
         rust_tokenizer = self.get_rust_tokenizer(self.tmpdirname)
-        py_tokenizer = self.tokenizer_class.from_pretrained(self.tmpdirname)
+        py_tokenizer = self.get_tokenizer(self.tmpdirname)
         raw_input_str = (
             "Let's see which <unk> is the better <unk_token_11> one <mask_1> It seems like this <mask_2> was important"
             " </s> <pad> <pad> <pad>"
@@ -168,7 +168,7 @@ class BigBirdPegasusTokenizationTest(TokenizerTesterMixin, unittest.TestCase):
 
     def test_mask_tokens_rust_pegasus(self):
         rust_tokenizer = self.get_rust_tokenizer(self.tmpdirname)
-        py_tokenizer = self.tokenizer_class.from_pretrained(self.tmpdirname)
+        py_tokenizer = self.get_tokenizer(self.tmpdirname)
         raw_input_str = (
             "Let's see which <unk> is the better <unk_token> one [MASK] It seems like this [MASK] was important </s>"
             " <pad> <pad> <pad>"

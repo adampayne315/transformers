@@ -243,7 +243,7 @@ class Wav2Vec2TokenizerTest(unittest.TestCase):
 
     def test_save_pretrained(self):
         pretrained_name = list(self.tokenizer_class.pretrained_vocab_files_map["vocab_file"].keys())[0]
-        tokenizer = self.tokenizer_class.from_pretrained(pretrained_name)
+        tokenizer = self.get_tokenizer(pretrained_name)
         tmpdirname2 = tempfile.mkdtemp()
 
         tokenizer_files = tokenizer.save_pretrained(tmpdirname2)

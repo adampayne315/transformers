@@ -470,7 +470,7 @@ class T5TokenizationTest(TokenizerTesterMixin, unittest.TestCase):
         EXPECTED_WITH_SPACE = [9459, 149, 33, 25, 692, 1]
         EXPECTED_WO_SPACE = [3845, 63, 149, 33, 25, 692, 1]
 
-        slow_ = self.tokenizer_class.from_pretrained(pretrained_name, add_prefix_space=False, legacy=False)
+        slow_ = self.get_tokenizer(pretrained_name, add_prefix_space=False, legacy=False)
         fast_ = self.get_rust_tokenizer(
             pretrained_name, add_prefix_space=False, legacy=False, from_slow=True
         )
@@ -483,7 +483,7 @@ class T5TokenizationTest(TokenizerTesterMixin, unittest.TestCase):
             fast_.decode(EXPECTED_WO_SPACE, skip_special_tokens=True),
         )
 
-        slow_ = self.tokenizer_class.from_pretrained(pretrained_name, add_prefix_space=True, legacy=False)
+        slow_ = self.get_tokenizer(pretrained_name, add_prefix_space=True, legacy=False)
         fast_ = self.get_rust_tokenizer(pretrained_name, add_prefix_space=True, legacy=False)
         self.assertEqual(slow_.encode(inputs), EXPECTED_WITH_SPACE)
         self.assertEqual(slow_.encode(inputs), fast_.encode(inputs))
