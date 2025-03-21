@@ -35,13 +35,14 @@ class RoFormerTokenizationTest(TokenizerTesterMixin, unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        tokenizer = cls.tokenizer_class.from_pretrained("junnyu/roformer_chinese_base")
+        tokenizer.save_pretrained(cls.tmpdirname)
 
     @classmethod
     @use_cache_if_possible
     @lru_cache(maxsize=64)
     def get_tokenizer(cls, pretrained_name=None, **kwargs):
         pretrained_name = pretrained_name or cls.tmpdirname
-        # "junnyu/roformer_chinese_base"
         return cls.tokenizer_class.from_pretrained(pretrained_name, **kwargs)
 
     @classmethod
