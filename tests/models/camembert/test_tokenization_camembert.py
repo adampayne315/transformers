@@ -192,7 +192,7 @@ class CamembertTokenizationTest(TokenizerTesterMixin, unittest.TestCase):
 
                 with self.subTest("Hub -> Fast: Test loading a fast tokenizer from the hub)"):
                     if self.rust_tokenizer_class is not None:
-                        tokenizer_fast = self.rust_tokenizer_class.from_pretrained(
+                        tokenizer_fast = self.get_rust_tokenizer(
                             pretrained_name, eos_token=new_eos, from_slow=True
                         )
                         self.assertEqual(tokenizer_fast._special_tokens_map["eos_token"], new_eos)

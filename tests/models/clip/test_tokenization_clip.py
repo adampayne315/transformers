@@ -88,7 +88,7 @@ class CLIPTokenizationTest(TokenizerTesterMixin, unittest.TestCase):
         for tokenizer, pretrained_name, kwargs in self.tokenizers_list:
             with self.subTest(f"{tokenizer.__class__.__name__} ({pretrained_name})"):
                 tokenizer_s = self.tokenizer_class.from_pretrained(pretrained_name, **kwargs)
-                tokenizer_r = self.rust_tokenizer_class.from_pretrained(pretrained_name, **kwargs)
+                tokenizer_r = self.get_rust_tokenizer(pretrained_name, **kwargs)
 
                 text = "A\n'll 11p223RF☆ho!!to?'d'd''d of a cat to-$''d."
                 text_tokenized_s = tokenizer_s.tokenize(text)
@@ -148,7 +148,7 @@ class CLIPTokenizationTest(TokenizerTesterMixin, unittest.TestCase):
                 text_of_1_token = "hello"  # `hello` is a token in the vocabulary of `pretrained_name`
                 text = f"{text_of_1_token} {text_of_1_token}"
 
-                tokenizer_r = self.rust_tokenizer_class.from_pretrained(
+                tokenizer_r = self.get_rust_tokenizer(
                     pretrained_name,
                     use_fast=True,
                 )
@@ -161,7 +161,7 @@ class CLIPTokenizationTest(TokenizerTesterMixin, unittest.TestCase):
 
                 text = f" {text}"
 
-                tokenizer_r = self.rust_tokenizer_class.from_pretrained(
+                tokenizer_r = self.get_rust_tokenizer(
                     pretrained_name,
                     use_fast=True,
                 )
@@ -176,7 +176,7 @@ class CLIPTokenizationTest(TokenizerTesterMixin, unittest.TestCase):
         # Test related to the breaking change introduced in transformers v4.17.0
         # We need to check that an error in raised when the user try to load a previous version of the tokenizer.
         with self.assertRaises(ValueError) as context:
-            self.rust_tokenizer_class.from_pretrained("robot-test/old-clip-tokenizer")
+            self.get_rust_tokenizer("robot-test/old-clip-tokenizer")
 
         self.assertTrue(
             context.exception.args[0].startswith(

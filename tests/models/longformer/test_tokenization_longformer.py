@@ -183,7 +183,7 @@ class LongformerTokenizationTest(TokenizerTesterMixin, unittest.TestCase):
     def test_embeded_special_tokens(self):
         for tokenizer, pretrained_name, kwargs in self.tokenizers_list:
             with self.subTest(f"{tokenizer.__class__.__name__} ({pretrained_name})"):
-                tokenizer_r = self.rust_tokenizer_class.from_pretrained(pretrained_name, **kwargs)
+                tokenizer_r = self.get_rust_tokenizer(pretrained_name, **kwargs)
                 tokenizer_p = self.tokenizer_class.from_pretrained(pretrained_name, **kwargs)
                 sentence = "A, <mask> AllenNLP sentence."
                 tokens_r = tokenizer_r.encode_plus(sentence, add_special_tokens=True, return_token_type_ids=True)
@@ -214,7 +214,7 @@ class LongformerTokenizationTest(TokenizerTesterMixin, unittest.TestCase):
 
     def test_change_add_prefix_space_and_trim_offsets_args(self):
         for trim_offsets, add_prefix_space in itertools.product([True, False], repeat=2):
-            tokenizer_r = self.rust_tokenizer_class.from_pretrained(
+            tokenizer_r = self.get_rust_tokenizer(
                 self.tmpdirname, use_fast=True, add_prefix_space=add_prefix_space, trim_offsets=trim_offsets
             )
 
@@ -234,7 +234,7 @@ class LongformerTokenizationTest(TokenizerTesterMixin, unittest.TestCase):
                 text_of_1_token = "hello"  # `hello` is a token in the vocabulary of `pretrained_name`
                 text = f"{text_of_1_token} {text_of_1_token}"
 
-                tokenizer_r = self.rust_tokenizer_class.from_pretrained(
+                tokenizer_r = self.get_rust_tokenizer(
                     pretrained_name, use_fast=True, add_prefix_space=True, trim_offsets=True
                 )
                 encoding = tokenizer_r(text, return_offsets_mapping=True, add_special_tokens=False)
@@ -244,7 +244,7 @@ class LongformerTokenizationTest(TokenizerTesterMixin, unittest.TestCase):
                     (len(text_of_1_token) + 1, len(text_of_1_token) + 1 + len(text_of_1_token)),
                 )
 
-                tokenizer_r = self.rust_tokenizer_class.from_pretrained(
+                tokenizer_r = self.get_rust_tokenizer(
                     pretrained_name, use_fast=True, add_prefix_space=False, trim_offsets=True
                 )
                 encoding = tokenizer_r(text, return_offsets_mapping=True, add_special_tokens=False)
@@ -254,7 +254,7 @@ class LongformerTokenizationTest(TokenizerTesterMixin, unittest.TestCase):
                     (len(text_of_1_token) + 1, len(text_of_1_token) + 1 + len(text_of_1_token)),
                 )
 
-                tokenizer_r = self.rust_tokenizer_class.from_pretrained(
+                tokenizer_r = self.get_rust_tokenizer(
                     pretrained_name, use_fast=True, add_prefix_space=True, trim_offsets=False
                 )
                 encoding = tokenizer_r(text, return_offsets_mapping=True, add_special_tokens=False)
@@ -264,7 +264,7 @@ class LongformerTokenizationTest(TokenizerTesterMixin, unittest.TestCase):
                     (len(text_of_1_token), len(text_of_1_token) + 1 + len(text_of_1_token)),
                 )
 
-                tokenizer_r = self.rust_tokenizer_class.from_pretrained(
+                tokenizer_r = self.get_rust_tokenizer(
                     pretrained_name, use_fast=True, add_prefix_space=False, trim_offsets=False
                 )
                 encoding = tokenizer_r(text, return_offsets_mapping=True, add_special_tokens=False)
@@ -286,7 +286,7 @@ class LongformerTokenizationTest(TokenizerTesterMixin, unittest.TestCase):
                 #     (1 + len(text_of_1_token) + 1, 1 + len(text_of_1_token) + 1 + len(text_of_1_token)),
                 # )
 
-                tokenizer_r = self.rust_tokenizer_class.from_pretrained(
+                tokenizer_r = self.get_rust_tokenizer(
                     pretrained_name, use_fast=True, add_prefix_space=False, trim_offsets=True
                 )
                 encoding = tokenizer_r(text, return_offsets_mapping=True, add_special_tokens=False)
