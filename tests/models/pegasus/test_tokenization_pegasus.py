@@ -34,12 +34,13 @@ class PegasusTokenizationTest(TokenizerTesterMixin, unittest.TestCase):
     test_rust_tokenizer = True
     test_sentencepiece = True
 
-    def setUp(self):
-        super().setUp()
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
 
         # We have a SentencePiece fixture for testing
         tokenizer = PegasusTokenizer(SAMPLE_VOCAB)
-        tokenizer.save_pretrained(self.tmpdirname)
+        tokenizer.save_pretrained(cls.tmpdirname)
 
     @cached_property
     def _large_tokenizer(self):
@@ -48,7 +49,8 @@ class PegasusTokenizationTest(TokenizerTesterMixin, unittest.TestCase):
     @classmethod
     @use_cache_if_possible
     @lru_cache(maxsize=64)
-    def get_tokenizer(cls, **kwargs) -> PegasusTokenizer:
+    def get_tokenizer(cls, pretrained_name=None, **kwargs) -> PegasusTokenizer:
+        pretrained_name = pretrained_name or cls.tmpdirname
         return PegasusTokenizer.from_pretrained(pretrained_name, **kwargs)
 
     def get_input_output_texts(self, tokenizer):
@@ -142,12 +144,13 @@ class BigBirdPegasusTokenizationTest(TokenizerTesterMixin, unittest.TestCase):
     test_rust_tokenizer = True
     test_sentencepiece = True
 
-    def setUp(self):
-        super().setUp()
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
 
         # We have a SentencePiece fixture for testing
         tokenizer = PegasusTokenizer(SAMPLE_VOCAB, offset=0, mask_token_sent=None, mask_token="[MASK]")
-        tokenizer.save_pretrained(self.tmpdirname)
+        tokenizer.save_pretrained(cls.tmpdirname)
 
     @cached_property
     def _large_tokenizer(self):
@@ -156,7 +159,8 @@ class BigBirdPegasusTokenizationTest(TokenizerTesterMixin, unittest.TestCase):
     @classmethod
     @use_cache_if_possible
     @lru_cache(maxsize=64)
-    def get_tokenizer(cls, **kwargs) -> PegasusTokenizer:
+    def get_tokenizer(cls, pretrained_name=None, **kwargs) -> PegasusTokenizer:
+        pretrained_name = pretrained_name or cls.tmpdirname
         return PegasusTokenizer.from_pretrained(pretrained_name, **kwargs)
 
     def get_input_output_texts(self, tokenizer):

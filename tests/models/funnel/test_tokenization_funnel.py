@@ -59,13 +59,15 @@ class FunnelTokenizationTest(TokenizerTesterMixin, unittest.TestCase):
     @use_cache_if_possible
     @lru_cache(maxsize=64)
     def get_tokenizer(cls, pretrained_name=None, **kwargs):
+        pretrained_name = pretrained_name or cls.tmpdirname
         return FunnelTokenizer.from_pretrained(pretrained_name, **kwargs)
 
     @classmethod
     @use_cache_if_possible
     @lru_cache(maxsize=64)
     def get_rust_tokenizer(cls, pretrained_name=None, **kwargs):
-        return FunnelTokenizerFast.from_pretrained(self.tmpdirname, **kwargs)
+        pretrained_name = pretrained_name or cls.tmpdirname
+        return FunnelTokenizerFast.from_pretrained(pretrained_name, **kwargs)
 
     def get_input_output_texts(self, tokenizer):
         input_text = "UNwant\u00e9d,running"

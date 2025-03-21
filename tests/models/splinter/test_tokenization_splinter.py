@@ -53,11 +53,16 @@ class SplinterTokenizationTest(TokenizerTesterMixin, unittest.TestCase):
     @classmethod
     @use_cache_if_possible
     @lru_cache(maxsize=64)
-    def get_tokenizer(cls, **kwargs) -> SplinterTokenizer:
+    def get_tokenizer(cls, pretrained_name, **kwargs) -> SplinterTokenizer:
+        pretrained_name = pretrained_name or cls.tmpdirname
         return cls.tokenizer_class.from_pretrained(pretrained_name, **kwargs)
 
+    @classmethod
+    @use_cache_if_possible
+    @lru_cache(maxsize=64)
     def get_rust_tokenizer(cls, pretrained_name=None, **kwargs) -> SplinterTokenizerFast:
-        return self.rust_tokenizer_class.from_pretrained(self.tmpdirname, **kwargs)
+        pretrained_name = pretrained_name or cls.tmpdirname
+        return cls.rust_tokenizer_class.from_pretrained(pretrained_name, **kwargs)
 
     # Copied from transformers.models.siglip.SiglipTokenizationTest.test_get_vocab
     def test_get_vocab(self):

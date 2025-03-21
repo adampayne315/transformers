@@ -45,12 +45,13 @@ class T5TokenizationTest(TokenizerTesterMixin, unittest.TestCase):
     test_rust_tokenizer = True
     test_sentencepiece = True
 
-    def setUp(self):
-        super().setUp()
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
 
         # We have a SentencePiece fixture for testing
         tokenizer = T5Tokenizer(SAMPLE_VOCAB)
-        tokenizer.save_pretrained(self.tmpdirname)
+        tokenizer.save_pretrained(cls.tmpdirname)
 
     def test_convert_token_and_id(self):
         """Test ``_convert_token_to_id`` and ``_convert_id_to_token``."""
@@ -149,11 +150,16 @@ class T5TokenizationTest(TokenizerTesterMixin, unittest.TestCase):
     @classmethod
     @use_cache_if_possible
     @lru_cache(maxsize=64)
-    def get_tokenizer(cls, **kwargs) -> T5Tokenizer:
+    def get_tokenizer(cls, pretrained_name=None, **kwargs) -> T5Tokenizer:
+        pretrained_name = pretrained_name or cls.tmpdirname
         return cls.tokenizer_class.from_pretrained(pretrained_name, **kwargs)
 
+    @classmethod
+    @use_cache_if_possible
+    @lru_cache(maxsize=64)
     def get_rust_tokenizer(cls, pretrained_name=None, **kwargs) -> T5TokenizerFast:
-        return self.rust_tokenizer_class.from_pretrained(self.tmpdirname, **kwargs)
+        pretrained_name = pretrained_name or cls.tmpdirname
+        return cls.rust_tokenizer_class.from_pretrained(pretrained_name, **kwargs)
 
     def test_rust_and_python_full_tokenizers(self):
         if not self.test_rust_tokenizer:

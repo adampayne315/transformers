@@ -33,8 +33,9 @@ class LayoutLMTokenizationTest(TokenizerTesterMixin, unittest.TestCase):
     test_rust_tokenizer = True
     space_between_special_tokens = True
 
-    def setUp(self):
-        super().setUp()
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
 
         vocab_tokens = [
             "[UNK]",
@@ -51,14 +52,15 @@ class LayoutLMTokenizationTest(TokenizerTesterMixin, unittest.TestCase):
             "low",
             "lowest",
         ]
-        self.vocab_file = os.path.join(self.tmpdirname, VOCAB_FILES_NAMES["vocab_file"])
-        with open(self.vocab_file, "w", encoding="utf-8") as vocab_writer:
+        cls.vocab_file = os.path.join(cls.tmpdirname, VOCAB_FILES_NAMES["vocab_file"])
+        with open(cls.vocab_file, "w", encoding="utf-8") as vocab_writer:
             vocab_writer.write("".join([x + "\n" for x in vocab_tokens]))
 
     @classmethod
     @use_cache_if_possible
     @lru_cache(maxsize=64)
     def get_tokenizer(cls, pretrained_name=None, **kwargs):
+        pretrained_name = pretrained_name or cls.tmpdirname
         return LayoutLMTokenizer.from_pretrained(pretrained_name, **kwargs)
 
     def get_input_output_texts(self, tokenizer):

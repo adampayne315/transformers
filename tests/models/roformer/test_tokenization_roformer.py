@@ -32,20 +32,24 @@ class RoFormerTokenizationTest(TokenizerTesterMixin, unittest.TestCase):
     space_between_special_tokens = True
     test_rust_tokenizer = True
 
-    def setUp(self):
-        super().setUp()
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
 
     @classmethod
     @use_cache_if_possible
     @lru_cache(maxsize=64)
     def get_tokenizer(cls, pretrained_name=None, **kwargs):
-        return cls.tokenizer_class.from_pretrained("junnyu/roformer_chinese_base", **kwargs)
+        pretrained_name = pretrained_name or cls.tmpdirname
+        # "junnyu/roformer_chinese_base"
+        return cls.tokenizer_class.from_pretrained(pretrained_name, **kwargs)
 
     @classmethod
     @use_cache_if_possible
     @lru_cache(maxsize=64)
     def get_rust_tokenizer(cls, pretrained_name=None, **kwargs):
-        return self.rust_tokenizer_class.from_pretrained("junnyu/roformer_chinese_base", **kwargs)
+        pretrained_name = pretrained_name or cls.tmpdirname
+        return cls.rust_tokenizer_class.from_pretrained(pretrained_name, **kwargs)
 
     def get_chinese_input_output_texts(self):
         input_text = "永和服装饰品有限公司,今天天气非常好"

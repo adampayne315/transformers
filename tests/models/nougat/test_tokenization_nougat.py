@@ -14,12 +14,13 @@
 # limitations under the License.
 
 import unittest
+from functools import lru_cache
 
 from transformers import NougatTokenizerFast
 from transformers.models.nougat.tokenization_nougat_fast import markdown_compatible, normalize_list_like_lines
 from transformers.testing_utils import require_levenshtein, require_nltk, require_tokenizers
 
-from ...test_tokenization_common import TokenizerTesterMixin
+from ...test_tokenization_common import TokenizerTesterMixin, use_cache_if_possible
 
 
 @require_tokenizers
@@ -43,7 +44,8 @@ class NougatTokenizationTest(TokenizerTesterMixin, unittest.TestCase):
     @lru_cache(maxsize=64)
     def get_rust_tokenizer(cls, pretrained_name=None, **kwargs):
         kwargs.update(cls.special_tokens_map)
-        return NougatTokenizerFast.from_pretrained(self.tmpdirname, **kwargs)
+        pretrained_name = pretrained_name or cls.tmpdirname
+        return NougatTokenizerFast.from_pretrained(pretrained_name, **kwargs)
 
     def test_padding(self, max_length=6):
         for tokenizer, pretrained_name, kwargs in self.tokenizers_list:

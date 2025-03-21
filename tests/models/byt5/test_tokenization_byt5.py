@@ -40,10 +40,11 @@ class ByT5TokenizationTest(TokenizerTesterMixin, unittest.TestCase):
     tokenizer_class = ByT5Tokenizer
     test_rust_tokenizer = False
 
-    def setUp(self):
-        super().setUp()
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
         tokenizer = ByT5Tokenizer()
-        tokenizer.save_pretrained(self.tmpdirname)
+        tokenizer.save_pretrained(cls.tmpdirname)
 
     @cached_property
     def t5_base_tokenizer(self):
@@ -52,7 +53,8 @@ class ByT5TokenizationTest(TokenizerTesterMixin, unittest.TestCase):
     @classmethod
     @use_cache_if_possible
     @lru_cache(maxsize=64)
-    def get_tokenizer(cls, **kwargs) -> ByT5Tokenizer:
+    def get_tokenizer(cls, pretrained_name, **kwargs) -> ByT5Tokenizer:
+        pretrained_name = pretrained_name or cls.tmpdirname
         return cls.tokenizer_class.from_pretrained(pretrained_name, **kwargs)
 
     def get_clean_sequence(self, tokenizer, with_prefix_space=False, max_length=20, min_length=5) -> Tuple[str, list]:

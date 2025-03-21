@@ -13,11 +13,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from functools import lru_cache
 
 from transformers import SqueezeBertTokenizer, SqueezeBertTokenizerFast
 from transformers.testing_utils import require_tokenizers, slow
 
 from ..bert.test_tokenization_bert import BertTokenizationTest
+from ...test_tokenization_common import use_cache_if_possible
 
 
 @require_tokenizers
@@ -31,7 +33,8 @@ class SqueezeBertTokenizationTest(BertTokenizationTest):
     @use_cache_if_possible
     @lru_cache(maxsize=64)
     def get_rust_tokenizer(cls, pretrained_name=None, **kwargs):
-        return SqueezeBertTokenizerFast.from_pretrained(self.tmpdirname, **kwargs)
+        pretrained_name = pretrained_name or cls.tmpdirname
+        return SqueezeBertTokenizerFast.from_pretrained(pretrained_name, **kwargs)
 
     @slow
     def test_sequence_builders(self):

@@ -46,12 +46,13 @@ class SiglipTokenizationTest(TokenizerTesterMixin, unittest.TestCase):
     test_sentencepiece_ignore_case = True
 
     # Copied from tests.models.t5.test_tokenization_t5.T5TokenizationTest.setUp with T5->Siglip
-    def setUp(self):
-        super().setUp()
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
 
         # We have a SentencePiece fixture for testing
         tokenizer = SiglipTokenizer(SAMPLE_VOCAB)
-        tokenizer.save_pretrained(self.tmpdirname)
+        tokenizer.save_pretrained(cls.tmpdirname)
 
     # Copied from tests.models.t5.test_tokenization_t5.T5TokenizationTest.test_convert_token_and_id with T5->Siglip
     def test_convert_token_and_id(self):
@@ -140,7 +141,8 @@ class SiglipTokenizationTest(TokenizerTesterMixin, unittest.TestCase):
     @classmethod
     @use_cache_if_possible
     @lru_cache(maxsize=64)
-    def get_tokenizer(cls, **kwargs) -> SiglipTokenizer:
+    def get_tokenizer(cls, pretrained_name, **kwargs) -> SiglipTokenizer:
+        pretrained_name = pretrained_name or cls.tmpdirname
         return cls.tokenizer_class.from_pretrained(pretrained_name, **kwargs)
 
     # Copied from tests.models.t5.test_tokenization_t5.T5TokenizationTest.test_rust_and_python_full_tokenizers with T5->Siglip

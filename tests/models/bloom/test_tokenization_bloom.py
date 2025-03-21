@@ -14,13 +14,14 @@
 # limitations under the License.
 
 import unittest
+from functools import lru_cache
 
 from datasets import load_dataset
 
 from transformers import BloomTokenizerFast
 from transformers.testing_utils import require_jinja, require_tokenizers
 
-from ...test_tokenization_common import TokenizerTesterMixin
+from ...test_tokenization_common import TokenizerTesterMixin, use_cache_if_possible
 
 
 @require_tokenizers
@@ -44,7 +45,8 @@ class BloomTokenizationTest(TokenizerTesterMixin, unittest.TestCase):
     @lru_cache(maxsize=64)
     def get_rust_tokenizer(cls, pretrained_name=None, **kwargs):
         kwargs.update(cls.special_tokens_map)
-        return BloomTokenizerFast.from_pretrained(self.tmpdirname, **kwargs)
+        pretrained_name = pretrained_name or cls.tmpdirname
+        return BloomTokenizerFast.from_pretrained(pretrained_name, **kwargs)
 
     @unittest.skip(reason="This needs a slow tokenizer. Bloom does not have one!")
     def test_encode_decode_with_spaces(self):

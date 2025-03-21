@@ -64,7 +64,8 @@ class CLIPTokenizationTest(TokenizerTesterMixin, unittest.TestCase):
     @lru_cache(maxsize=64)
     def get_rust_tokenizer(cls, pretrained_name=None, **kwargs):
         kwargs.update(cls.special_tokens_map)
-        return CLIPTokenizerFast.from_pretrained(self.tmpdirname, **kwargs)
+        pretrained_name = pretrained_name or cls.tmpdirname
+        return CLIPTokenizerFast.from_pretrained(pretrained_name, **kwargs)
 
     def get_input_output_texts(self, tokenizer):
         input_text = "lower newer"

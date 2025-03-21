@@ -14,11 +14,12 @@
 # limitations under the License.
 
 import unittest
+from functools import lru_cache
 
 from transformers import CohereTokenizerFast
 from transformers.testing_utils import require_jinja, require_tokenizers, require_torch_multi_gpu
 
-from ...test_tokenization_common import TokenizerTesterMixin
+from ...test_tokenization_common import TokenizerTesterMixin, use_cache_if_possible
 
 
 @require_tokenizers
@@ -37,17 +38,19 @@ class CohereTokenizationTest(TokenizerTesterMixin, unittest.TestCase):
         "pad_token": "<PAD>",
     }
 
-    def setUp(self):
-        super().setUp()
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
         tokenizer = CohereTokenizerFast.from_pretrained("hf-internal-testing/tiny-random-CohereForCausalLM")
-        tokenizer.save_pretrained(self.tmpdirname)
+        tokenizer.save_pretrained(cls.tmpdirname)
 
     @classmethod
     @use_cache_if_possible
     @lru_cache(maxsize=64)
     def get_rust_tokenizer(cls, pretrained_name=None, **kwargs):
         kwargs.update(cls.special_tokens_map)
-        return CohereTokenizerFast.from_pretrained(self.tmpdirname, **kwargs)
+        pretrained_name = pretrained_name or cls.tmpdirname
+        return CohereTokenizerFast.from_pretrained(cls.tmpdirname, **kwargs)
 
     # This gives CPU OOM on a single-gpu runner (~60G RAM). On multi-gpu runner, it has ~180G RAM which is enough.
     @require_torch_multi_gpu
