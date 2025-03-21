@@ -42,8 +42,11 @@ class CohereTokenizationTest(TokenizerTesterMixin, unittest.TestCase):
         tokenizer = CohereTokenizerFast.from_pretrained("hf-internal-testing/tiny-random-CohereForCausalLM")
         tokenizer.save_pretrained(self.tmpdirname)
 
-    def get_rust_tokenizer(self, **kwargs):
-        kwargs.update(self.special_tokens_map)
+    @classmethod
+    @use_cache_if_possible
+    @lru_cache(maxsize=64)
+    def get_rust_tokenizer(cls, pretrained_name=None, **kwargs):
+        kwargs.update(cls.special_tokens_map)
         return CohereTokenizerFast.from_pretrained(self.tmpdirname, **kwargs)
 
     # This gives CPU OOM on a single-gpu runner (~60G RAM). On multi-gpu runner, it has ~180G RAM which is enough.

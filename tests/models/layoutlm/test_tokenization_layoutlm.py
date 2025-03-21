@@ -58,8 +58,8 @@ class LayoutLMTokenizationTest(TokenizerTesterMixin, unittest.TestCase):
     @classmethod
     @use_cache_if_possible
     @lru_cache(maxsize=64)
-    def get_tokenizer(cls, **kwargs):
-        return LayoutLMTokenizer.from_pretrained(cls.tmpdirname, **kwargs)
+    def get_tokenizer(cls, pretrained_name=None, **kwargs):
+        return LayoutLMTokenizer.from_pretrained(pretrained_name, **kwargs)
 
     def get_input_output_texts(self, tokenizer):
         input_text = "UNwant\u00e9d,running"

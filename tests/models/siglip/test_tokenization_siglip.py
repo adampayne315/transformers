@@ -141,7 +141,7 @@ class SiglipTokenizationTest(TokenizerTesterMixin, unittest.TestCase):
     @use_cache_if_possible
     @lru_cache(maxsize=64)
     def get_tokenizer(cls, **kwargs) -> SiglipTokenizer:
-        return cls.tokenizer_class.from_pretrained(cls.tmpdirname, **kwargs)
+        return cls.tokenizer_class.from_pretrained(pretrained_name, **kwargs)
 
     # Copied from tests.models.t5.test_tokenization_t5.T5TokenizationTest.test_rust_and_python_full_tokenizers with T5->Siglip
     def test_rust_and_python_full_tokenizers(self):

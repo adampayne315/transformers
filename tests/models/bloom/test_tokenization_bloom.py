@@ -39,8 +39,11 @@ class BloomTokenizationTest(TokenizerTesterMixin, unittest.TestCase):
         tokenizer = BloomTokenizerFast.from_pretrained("bigscience/tokenizer")
         tokenizer.save_pretrained(self.tmpdirname)
 
-    def get_rust_tokenizer(self, **kwargs):
-        kwargs.update(self.special_tokens_map)
+    @classmethod
+    @use_cache_if_possible
+    @lru_cache(maxsize=64)
+    def get_rust_tokenizer(cls, pretrained_name=None, **kwargs):
+        kwargs.update(cls.special_tokens_map)
         return BloomTokenizerFast.from_pretrained(self.tmpdirname, **kwargs)
 
     @unittest.skip(reason="This needs a slow tokenizer. Bloom does not have one!")

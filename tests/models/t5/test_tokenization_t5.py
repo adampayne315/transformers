@@ -150,9 +150,9 @@ class T5TokenizationTest(TokenizerTesterMixin, unittest.TestCase):
     @use_cache_if_possible
     @lru_cache(maxsize=64)
     def get_tokenizer(cls, **kwargs) -> T5Tokenizer:
-        return cls.tokenizer_class.from_pretrained(cls.tmpdirname, **kwargs)
+        return cls.tokenizer_class.from_pretrained(pretrained_name, **kwargs)
 
-    def get_rust_tokenizer(self, **kwargs) -> T5TokenizerFast:
+    def get_rust_tokenizer(cls, pretrained_name=None, **kwargs) -> T5TokenizerFast:
         return self.rust_tokenizer_class.from_pretrained(self.tmpdirname, **kwargs)
 
     def test_rust_and_python_full_tokenizers(self):

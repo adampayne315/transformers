@@ -64,7 +64,7 @@ class MoshiTokenizationTest(TokenizerTesterMixin, unittest.TestCase):
         tokenizer.pad_token = tokenizer.eos_token
         tokenizer.save_pretrained(self.tmpdirname)
 
-    def get_rust_tokenizer(self, **kwargs) -> PreTrainedTokenizerFast:
+    def get_rust_tokenizer(cls, pretrained_name=None, **kwargs) -> PreTrainedTokenizerFast:
         return self.rust_tokenizer_class.from_pretrained(self.tmpdirname, **kwargs)
 
     @unittest.skip(reason="No slow tokenizer")

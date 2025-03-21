@@ -56,11 +56,12 @@ class VitsTokenizerTest(TokenizerTesterMixin, unittest.TestCase):
     @classmethod
     @use_cache_if_possible
     @lru_cache(maxsize=64)
-    def get_tokenizer(cls, **kwargs):
+    def get_tokenizer(cls, pretrained_name=None, **kwargs):
         kwargs.update(cls.special_tokens_map)
         kwargs["phonemize"] = False
         kwargs["normalize"] = False
-        return VitsTokenizer.from_pretrained(cls.tmpdirname, **kwargs)
+        pretrained_name = pretrained_name or cls.tmpdirname
+        return VitsTokenizer.from_pretrained(pretrained_name, **kwargs)
 
     def get_clean_sequence(self, tokenizer, with_prefix_space=False, max_length=20, min_length=5):
         txt = "beyonce lives in los angeles"

@@ -71,8 +71,8 @@ class M2M100TokenizationTest(TokenizerTesterMixin, unittest.TestCase):
     @classmethod
     @use_cache_if_possible
     @lru_cache(maxsize=64)
-    def get_tokenizer(cls, **kwargs):
-        return M2M100Tokenizer.from_pretrained(cls.tmpdirname, **kwargs)
+    def get_tokenizer(cls, pretrained_name=None, **kwargs):
+        return M2M100Tokenizer.from_pretrained(pretrained_name, **kwargs)
 
     def get_input_output_texts(self, tokenizer):
         return (

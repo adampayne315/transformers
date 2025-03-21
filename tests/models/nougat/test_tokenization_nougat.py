@@ -38,8 +38,11 @@ class NougatTokenizationTest(TokenizerTesterMixin, unittest.TestCase):
         tokenizer = NougatTokenizerFast.from_pretrained("facebook/nougat-base")
         tokenizer.save_pretrained(self.tmpdirname)
 
-    def get_rust_tokenizer(self, **kwargs):
-        kwargs.update(self.special_tokens_map)
+    @classmethod
+    @use_cache_if_possible
+    @lru_cache(maxsize=64)
+    def get_rust_tokenizer(cls, pretrained_name=None, **kwargs):
+        kwargs.update(cls.special_tokens_map)
         return NougatTokenizerFast.from_pretrained(self.tmpdirname, **kwargs)
 
     def test_padding(self, max_length=6):

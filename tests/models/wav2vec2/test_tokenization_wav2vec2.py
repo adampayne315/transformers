@@ -75,9 +75,10 @@ class Wav2Vec2TokenizerTest(unittest.TestCase):
     @classmethod
     @use_cache_if_possible
     @lru_cache(maxsize=64)
-    def get_tokenizer(cls, **kwargs):
+    def get_tokenizer(cls, pretrained_name=None, **kwargs):
         kwargs.update(cls.special_tokens_map)
-        return Wav2Vec2Tokenizer.from_pretrained(cls.tmpdirname, **kwargs)
+        pretrained_name = pretrained_name or cls.tmpdirname
+        return Wav2Vec2Tokenizer.from_pretrained(pretrained_name, **kwargs)
 
     def test_tokenizer_decode(self):
         # TODO(PVP) - change to facebook
@@ -395,9 +396,10 @@ class Wav2Vec2CTCTokenizerTest(TokenizerTesterMixin, unittest.TestCase):
     @classmethod
     @use_cache_if_possible
     @lru_cache(maxsize=64)
-    def get_tokenizer(cls, **kwargs):
+    def get_tokenizer(cls, pretrained_name=None, **kwargs):
         kwargs.update(cls.special_tokens_map)
-        return Wav2Vec2CTCTokenizer.from_pretrained(cls.tmpdirname, **kwargs)
+        pretrained_name = pretrained_name or cls.tmpdirname
+        return Wav2Vec2CTCTokenizer.from_pretrained(pretrained_name, **kwargs)
 
     def test_tokenizer_add_token_chars(self):
         tokenizer = self.tokenizer_class.from_pretrained("facebook/wav2vec2-base-960h")

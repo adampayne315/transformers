@@ -46,7 +46,7 @@ class CanineTokenizationTest(TokenizerTesterMixin, unittest.TestCase):
     @use_cache_if_possible
     @lru_cache(maxsize=64)
     def get_tokenizer(cls, **kwargs) -> CanineTokenizer:
-        tokenizer = cls.tokenizer_class.from_pretrained(cls.tmpdirname, **kwargs)
+        tokenizer = cls.tokenizer_class.from_pretrained(pretrained_name, **kwargs)
         tokenizer._unicode_vocab_size = 1024
         return tokenizer
 

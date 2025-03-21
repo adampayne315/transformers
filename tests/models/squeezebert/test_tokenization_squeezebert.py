@@ -27,7 +27,10 @@ class SqueezeBertTokenizationTest(BertTokenizationTest):
     test_rust_tokenizer = True
     from_pretrained_id = "squeezebert/squeezebert-uncased"
 
-    def get_rust_tokenizer(self, **kwargs):
+    @classmethod
+    @use_cache_if_possible
+    @lru_cache(maxsize=64)
+    def get_rust_tokenizer(cls, pretrained_name=None, **kwargs):
         return SqueezeBertTokenizerFast.from_pretrained(self.tmpdirname, **kwargs)
 
     @slow
