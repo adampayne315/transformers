@@ -233,16 +233,37 @@ class TokenizerTesterMixin:
             [cls.from_pretrained_id] if isinstance(cls.from_pretrained_id, str) else cls.from_pretrained_id
         )
 
+        cls.tmp_repo = tempfile.mkdtemp()
+
         cls.tokenizers_list = []
         if cls.test_rust_tokenizer:
-            cls.tokenizers_list = [
-                (
-                    cls.rust_tokenizer_class,
-                    pretrained_id,
-                    cls.from_pretrained_kwargs if cls.from_pretrained_kwargs is not None else {},
+
+            for pretrained_id in cls.from_pretrained_id:
+                # # tok = cls.get_rust_tokenizer(pretrained_id)
+                # # tok.save_pretrained(f"{pretrained_id}_local")
+                local_pretrained_id = os.path.join(cls.tmp_repo, pretrained_id)
+                from huggingface_hub import snapshot_download
+                snapshot_download(
+                    repo_id=pretrained_id,
+                    local_dir= local_pretrained_id,
+                    allow_patterns=["*.json", "sentencepiece.bpe.model"],
                 )
-                for pretrained_id in cls.from_pretrained_id
-            ]
+                # # breakpoint()
+                cls.tokenizers_list.append(
+                    (
+                        cls.rust_tokenizer_class,
+                        local_pretrained_id,
+                        cls.from_pretrained_kwargs if cls.from_pretrained_kwargs is not None else {},
+                    )
+                )
+            # cls.tokenizers_list = [
+            #     (
+            #         cls.rust_tokenizer_class,
+            #         f"{pretrained_id}_local",
+            #         cls.from_pretrained_kwargs if cls.from_pretrained_kwargs is not None else {},
+            #     )
+            #     for pretrained_id in cls.from_pretrained_id
+            # ]
         else:
             cls.tokenizers_list = []
         with open(f"{get_tests_dir()}/fixtures/sample_text.txt", encoding="utf-8") as f_data:
@@ -4669,51 +4690,154 @@ class TokenizerTesterMixin:
             self.assertTrue(all(item in tokenizer.added_tokens_decoder.items() for item in expected.items()))
             return tokenizer
 
+        idx = 0
+        import datetime
+        s = datetime.datetime.now()
+        e = datetime.datetime.now()
+        t = (e-s).total_seconds()
+        print(t)
+        with open(f"{idx}.txt", "w") as fp:
+            fp.write(str(t))
+        idx += 1
+
+        import datetime
+        s = datetime.datetime.now()
         new_eos = AddedToken("[NEW_EOS]", rstrip=False, lstrip=True, normalized=False, special=True)
+        e = datetime.datetime.now()
+        t = (e-s).total_seconds()
+        print(t)
+        with open(f"{idx}.txt", "w") as fp:
+            fp.write(str(t))
+        idx += 1
+
         for tokenizer, pretrained_name, kwargs in self.tokenizers_list:
             with self.subTest(f"{tokenizer.__class__.__name__} ({pretrained_name})"):
                 # Load a slow tokenizer from the hub, init with the new token for fast to also include it
+
+                import datetime
+                s = datetime.datetime.now()
                 tokenizer = self.get_tokenizer(pretrained_name, eos_token=new_eos)
+                e = datetime.datetime.now()
+                t = (e - s).total_seconds()
+                print(t)
+                with open(f"{idx}.txt", "w") as fp:
+                    fp.write(str(t))
+                idx += 1
+
+
+
                 EXPECTED_ADDED_TOKENS_DECODER = tokenizer.added_tokens_decoder
                 with self.subTest("Hub -> Slow: Test loading a slow tokenizer from the hub)"):
                     self.assertEqual(tokenizer._special_tokens_map["eos_token"], new_eos)
                     self.assertIn(new_eos, list(tokenizer.added_tokens_decoder.values()))
 
                 with tempfile.TemporaryDirectory() as tmp_dir_2:
+
+                    import datetime
+                    s = datetime.datetime.now()
                     tokenizer.save_pretrained(tmp_dir_2)
+                    e = datetime.datetime.now()
+                    t = (e - s).total_seconds()
+                    print(t)
+                    with open(f"{idx}.txt", "w") as fp:
+                        fp.write(str(t))
+                    idx += 1
+
+
                     with self.subTest(
                         "Hub -> Slow -> Slow: Test saving this slow tokenizer and reloading it in the fast class"
                     ):
+                        import datetime
+                        s = datetime.datetime.now()
                         _test_added_vocab_and_eos(
                             EXPECTED_ADDED_TOKENS_DECODER, self.tokenizer_class, new_eos, tmp_dir_2
                         )
+                        e = datetime.datetime.now()
+                        t = (e - s).total_seconds()
+                        print(t)
+                        with open(f"{idx}.txt", "w") as fp:
+                            fp.write(str(t))
+                        idx += 1
 
                     if self.rust_tokenizer_class is not None:
                         with self.subTest(
                             "Hub -> Slow -> Fast: Test saving this slow tokenizer and reloading it in the fast class"
                         ):
+                            import datetime
+                            s = datetime.datetime.now()
                             tokenizer_fast = _test_added_vocab_and_eos(
                                 EXPECTED_ADDED_TOKENS_DECODER, self.rust_tokenizer_class, new_eos, tmp_dir_2
                             )
+                            e = datetime.datetime.now()
+                            t = (e - s).total_seconds()
+                            print(t)
+                            with open(f"{idx}.txt", "w") as fp:
+                                fp.write(str(t))
+                            idx += 1
+
+
                             with tempfile.TemporaryDirectory() as tmp_dir_3:
+                                import datetime
+                                s = datetime.datetime.now()
                                 tokenizer_fast.save_pretrained(tmp_dir_3)
+                                e = datetime.datetime.now()
+                                t = (e - s).total_seconds()
+                                print(t)
+                                with open(f"{idx}.txt", "w") as fp:
+                                    fp.write(str(t))
+                                idx += 1
+
                                 with self.subTest(
                                     "Hub -> Slow -> Fast -> Fast: Test saving this fast tokenizer and reloading it in the fast class"
                                 ):
+                                    import datetime
+                                    s = datetime.datetime.now()
                                     _test_added_vocab_and_eos(
                                         EXPECTED_ADDED_TOKENS_DECODER, self.rust_tokenizer_class, new_eos, tmp_dir_3
                                     )
+                                    e = datetime.datetime.now()
+                                    t = (e - s).total_seconds()
+                                    print(t)
+                                    with open(f"{idx}.txt", "w") as fp:
+                                        fp.write(str(t))
+                                    idx += 1
 
                                 with self.subTest(
                                     "Hub -> Slow -> Fast -> Slow: Test saving this slow tokenizer and reloading it in the slow class"
                                 ):
+                                    import datetime
+                                    s = datetime.datetime.now()
                                     _test_added_vocab_and_eos(
                                         EXPECTED_ADDED_TOKENS_DECODER, self.rust_tokenizer_class, new_eos, tmp_dir_3
                                     )
+                                    e = datetime.datetime.now()
+                                    t = (e - s).total_seconds()
+                                    print(t)
+                                    with open(f"{idx}.txt", "w") as fp:
+                                        fp.write(str(t))
+                                    idx += 1
+
+
 
                 with self.subTest("Hub -> Fast: Test loading a fast tokenizer from the hub)"):
                     if self.rust_tokenizer_class is not None:
+                        import datetime
+                        s = datetime.datetime.now()
+                        # breakpoint()
                         tokenizer_fast = self.get_rust_tokenizer(pretrained_name, eos_token=new_eos)
+                        # breakpoint()
+                        # tokenizer_fast = self.get_rust_tokenizer(pretrained_name, eos_token=new_eos)
+                        # breakpoint()
+                        # tokenizer_fast = self.get_rust_tokenizer(pretrained_name, eos_token=new_eos)
+                        e = datetime.datetime.now()
+                        t = (e - s).total_seconds()
+                        print(t)
+                        with open(f"{idx}.txt", "w") as fp:
+                            fp.write(str(t))
+                        idx += 1
+
+
+
                         self.assertEqual(tokenizer_fast._special_tokens_map["eos_token"], new_eos)
                         self.assertIn(new_eos, list(tokenizer_fast.added_tokens_decoder.values()))
                         # We can't test the following because for BC we kept the default rstrip lstrip in slow not fast. Will comment once normalization is alright
@@ -4728,16 +4852,48 @@ class TokenizerTesterMixin:
 
                         EXPECTED_ADDED_TOKENS_DECODER = tokenizer_fast.added_tokens_decoder
                         with tempfile.TemporaryDirectory() as tmp_dir_4:
+                            import datetime
+                            s = datetime.datetime.now()
                             tokenizer_fast.save_pretrained(tmp_dir_4)
+                            e = datetime.datetime.now()
+                            t = (e - s).total_seconds()
+                            print(t)
+                            with open(f"{idx}.txt", "w") as fp:
+                                fp.write(str(t))
+                            idx += 1
+
+
+
                             with self.subTest("Hub -> Fast -> Fast: saving Fast1 locally and loading"):
+                                import datetime
+                                s = datetime.datetime.now()
                                 _test_added_vocab_and_eos(
                                     EXPECTED_ADDED_TOKENS_DECODER, self.rust_tokenizer_class, new_eos, tmp_dir_4
                                 )
+                                e = datetime.datetime.now()
+                                t = (e - s).total_seconds()
+                                print(t)
+                                with open(f"{idx}.txt", "w") as fp:
+                                    fp.write(str(t))
+                                idx += 1
+
+
 
                             with self.subTest("Hub -> Fast -> Slow: saving Fast1 locally and loading"):
+
+                                import datetime
+                                s = datetime.datetime.now()
                                 _test_added_vocab_and_eos(
                                     EXPECTED_ADDED_TOKENS_DECODER, self.tokenizer_class, new_eos, tmp_dir_4
                                 )
+                                e = datetime.datetime.now()
+                                t = (e - s).total_seconds()
+                                print(t)
+                                with open(f"{idx}.txt", "w") as fp:
+                                    fp.write(str(t))
+                                idx += 1
+
+
 
     def test_special_token_addition(self):
         for tokenizer, pretrained_name, kwargs in self.tokenizers_list:
